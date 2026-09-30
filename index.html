@@ -1,0 +1,2126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Magnet Store Kenya | Perfumes & Beauty</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #fbf8f5;
+            color: #191513;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* HEADER */
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(251, 248, 245, 0.96);
+            border-bottom: 1px solid #eee;
+            padding: 15px 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: #743b40;
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        .logo-text strong {
+            display: block;
+            font-size: 15px;
+            letter-spacing: 2px;
+        }
+
+        .logo-text small {
+            color: #b36d70;
+            font-size: 9px;
+            letter-spacing: 2px;
+        }
+
+        nav {
+            display: flex;
+            gap: 25px;
+        }
+
+        nav a {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #a75f63;
+        }
+
+        .cart-button {
+            border: none;
+            background: #191513;
+            color: white;
+            padding: 11px 16px;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+
+        .cart-count {
+            background: #efd0cb;
+            color: #191513;
+            padding: 3px 8px;
+            border-radius: 50%;
+            margin-left: 5px;
+        }
+
+        /* HERO */
+
+        .hero {
+            min-height: 650px;
+            padding: 80px 7%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 40px;
+            background: linear-gradient(135deg, #fcf7f3, #f5e9e5);
+        }
+
+        .eyebrow {
+            color: #ad666b;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+        }
+
+        .hero h1 {
+            font-family: Georgia, serif;
+            font-size: clamp(50px, 6vw, 85px);
+            line-height: 1;
+            margin-bottom: 25px;
+        }
+
+        .hero h1 span {
+            color: #743b40;
+        }
+
+        .hero-text {
+            color: #756b65;
+            max-width: 580px;
+            font-size: 18px;
+            margin-bottom: 25px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 22px;
+            border-radius: 30px;
+            font-weight: bold;
+            border: none;
+        }
+
+        .btn-dark {
+            background: #191513;
+            color: white;
+        }
+
+        .btn-light {
+            background: white;
+            border: 1px solid #ddd;
+        }
+
+        .hero-info {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            color: #776c66;
+            font-size: 12px;
+        }
+
+        /* HERO VISUAL */
+
+        .hero-image {
+            min-height: 470px;
+            position: relative;
+        }
+
+        .circle {
+            position: absolute;
+            width: 360px;
+            height: 360px;
+            background: #ead4cf;
+            border-radius: 50%;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .perfume {
+            position: absolute;
+            width: 120px;
+            height: 190px;
+            border-radius: 20px 20px 30px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 20px 30px rgba(0,0,0,.18);
+        }
+
+        .perfume::before {
+            content: "";
+            position: absolute;
+            top: -32px;
+            width: 58px;
+            height: 35px;
+            border-radius: 8px 8px 3px 3px;
+            background: #272321;
+        }
+
+        .perfume-one {
+            background: linear-gradient(145deg, #a35e62, #693b3e);
+            left: 20%;
+            top: 135px;
+            transform: rotate(-7deg);
+        }
+
+        .perfume-two {
+            background: linear-gradient(145deg, #dfbbb4, #b47373);
+            right: 12%;
+            top: 90px;
+            transform: rotate(7deg);
+            color: #543033;
+        }
+
+        .lipstick {
+            position: absolute;
+            width: 40px;
+            height: 125px;
+            background: #272321;
+            border-radius: 10px;
+            left: 28%;
+            bottom: 40px;
+            transform: rotate(12deg);
+        }
+
+        .lipstick::before {
+            content: "";
+            position: absolute;
+            left: 8px;
+            top: -42px;
+            width: 24px;
+            height: 55px;
+            border-radius: 12px 12px 4px 4px;
+            background: #914d56;
+        }
+
+        /* BENEFITS */
+
+        .benefits {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            background: #fff;
+            border-bottom: 1px solid #eee;
+        }
+
+        .benefit {
+            padding: 25px 7%;
+        }
+
+        .benefit strong {
+            display: block;
+            font-size: 14px;
+        }
+
+        .benefit span {
+            font-size: 11px;
+            color: #817670;
+        }
+
+        /* SECTIONS */
+
+        .section {
+            padding: 80px 7%;
+        }
+
+        .section-title {
+            margin-bottom: 30px;
+        }
+
+        .section-title h2 {
+            font-family: Georgia, serif;
+            font-size: 45px;
+        }
+
+        /* CATEGORIES */
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .category {
+            border: 1px solid #e8ded9;
+            background: white;
+            padding: 25px;
+            border-radius: 22px;
+            text-align: left;
+            transition: .2s;
+        }
+
+        .category:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(0,0,0,.08);
+        }
+
+        .category-icon {
+            width: 50px;
+            height: 50px;
+            background: #f4e3df;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 40px;
+            font-size: 23px;
+            color: #743b40;
+        }
+
+        .category h3 {
+            margin-bottom: 5px;
+        }
+
+        .category p {
+            font-size: 12px;
+            color: #817670;
+        }
+
+        /* SHOP */
+
+        .filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .filter {
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 25px;
+            padding: 9px 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .filter.active,
+        .filter:hover {
+            background: #191513;
+            color: white;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .product {
+            background: white;
+            border: 1px solid #e8ded9;
+            border-radius: 22px;
+            overflow: hidden;
+        }
+
+        .product-image {
+            height: 240px;
+            background: #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .product-bottle {
+            width: 100px;
+            height: 130px;
+            border-radius: 18px 18px 25px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 15px 25px rgba(0,0,0,.15);
+        }
+
+        .pink {
+            background: #9d5c62;
+        }
+
+        .gold {
+            background: #b88b65;
+        }
+
+        .black {
+            background: #383634;
+        }
+
+        .purple {
+            background: #76506e;
+        }
+
+        .green {
+            background: #72816c;
+        }
+
+        .product-details {
+            padding: 16px;
+        }
+
+        .product-category {
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: #ae676c;
+            font-weight: bold;
+        }
+
+        .product-details h3 {
+            margin: 6px 0;
+            font-size: 16px;
+        }
+
+        .product-details p {
+            font-size: 11px;
+            color: #817670;
+            min-height: 38px;
+        }
+
+        .product-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 12px;
+        }
+
+        .price {
+            font-weight: bold;
+        }
+
+        .add-button {
+            background: #191513;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 13px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        /* PROMO */
+
+        .promo {
+            margin: 20px 7% 60px;
+            padding: 50px 6%;
+            background: #ead1ce;
+            border-radius: 30px;
+        }
+
+        .promo h2 {
+            font-family: Georgia, serif;
+            font-size: 45px;
+            margin-bottom: 10px;
+        }
+
+        .promo p {
+            color: #73625d;
+            margin-bottom: 20px;
+        }
+
+        /* ABOUT */
+
+        .about {
+            display: grid;
+            grid-template-columns: 1.2fr .8fr;
+            gap: 40px;
+        }
+
+        .about-box {
+            background: white;
+            padding: 45px;
+            border: 1px solid #e8ded9;
+            border-radius: 30px;
+        }
+
+        .about-box h2 {
+            font-family: Georgia, serif;
+            font-size: 45px;
+            margin-bottom: 20px;
+        }
+
+        .about-box p {
+            color: #756b65;
+        }
+
+        .steps {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .step {
+            background: #f1e6e1;
+            padding: 20px;
+            border-radius: 18px;
+        }
+
+        /* CONTACT */
+
+        .contact {
+            background: #191513;
+            color: white;
+            padding: 70px 7%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .contact h2 {
+            font-family: Georgia, serif;
+            font-size: 50px;
+        }
+
+        .contact p {
+            color: #bbb;
+        }
+
+        .contact-box {
+            background: #24201e;
+            padding: 18px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+        }
+
+        .contact-box small {
+            color: #a99e98;
+            display: block;
+        }
+
+        /* FOOTER */
+
+        footer {
+            padding: 25px 7%;
+            display: flex;
+            justify-content: space-between;
+            color: #777;
+            font-size: 11px;
+        }
+
+        /* CART */
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.4);
+            display: none;
+            z-index: 900;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        .cart {
+            position: fixed;
+            top: 0;
+            right: -430px;
+            width: 430px;
+            max-width: 100%;
+            height: 100vh;
+            background: white;
+            z-index: 1001;
+            transition: .3s;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -20px 0 50px rgba(0,0,0,.15);
+        }
+
+        .cart.open {
+            right: 0;
+        }
+
+        .cart-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .close-cart {
+            border: none;
+            background: #eee;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 20px;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 55px 1fr auto;
+            gap: 10px;
+            padding: 13px 0;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+
+        .cart-thumb {
+            width: 55px;
+            height: 55px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .cart-item h4 {
+            font-size: 12px;
+        }
+
+        .cart-item p {
+            font-size: 10px;
+            color: #777;
+        }
+
+        .quantity {
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .quantity button {
+            width: 22px;
+            height: 22px;
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            background: white;
+        }
+
+        .remove {
+            border: none !important;
+            width: auto !important;
+            color: #a44;
+            font-size: 9px;
+        }
+
+        .cart-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .checkout-button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 25px;
+            background: #191513;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .whatsapp-button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 25px;
+            background: #5d7658;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* CHECKOUT MODAL */
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.6);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            width: 500px;
+            max-width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            border-radius: 25px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            border: none;
+            background: #eee;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 20px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 14px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        form input,
+        form textarea,
+        form select {
+            width: 100%;
+            margin-top: 5px;
+            padding: 11px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .submit-order {
+            width: 100%;
+            padding: 14px;
+            background: #191513;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+
+        /* MOBILE */
+
+        @media(max-width: 950px) {
+            nav {
+                display: none;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .category-grid,
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .about,
+            .contact {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width: 600px) {
+            header {
+                padding: 12px 18px;
+            }
+
+            .hero,
+            .section,
+            .contact {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            .hero {
+                padding-top: 50px;
+            }
+
+            .benefits {
+                grid-template-columns: 1fr;
+            }
+
+            .category-grid,
+            .product-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .promo {
+                margin: 20px;
+                padding: 35px 25px;
+            }
+
+            footer {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <a href="#home" class="logo">
+        <div class="logo-icon">M</div>
+
+        <div class="logo-text">
+            <strong>MAGNET</strong>
+            <small>STORE KENYA</small>
+        </div>
+    </a>
+
+    <nav>
+        <a href="#shop">Shop</a>
+        <a href="#categories">Categories</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <button class="cart-button" onclick="openCart()">
+        Bag
+        <span class="cart-count" id="cartCount">0</span>
+    </button>
+
+</header>
+
+
+<section class="hero" id="home">
+
+    <div>
+
+        <p class="eyebrow">
+            MAGNET STORE KENYA
+        </p>
+
+        <h1>
+            Beauty that leaves an
+            <span>impression.</span>
+        </h1>
+
+        <p class="hero-text">
+            Discover perfumes, body care, skincare and beauty
+            essentials for every mood, moment and occasion.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="#shop" class="btn btn-dark">
+                Shop Products
+            </a>
+
+            <a href="#contact" class="btn btn-light">
+                Contact Us
+            </a>
+
+        </div>
+
+        <div class="hero-info">
+
+            <span>🇰🇪 Kenya Delivery</span>
+            <span>💳 M-Pesa Ready</span>
+            <span>💬 WhatsApp Orders</span>
+
+        </div>
+
+    </div>
+
+
+    <div class="hero-image">
+
+        <div class="circle"></div>
+
+        <div class="perfume perfume-one">
+            MAGNET<br>ROSE
+        </div>
+
+        <div class="perfume perfume-two">
+            MAGNET<br>NOIR
+        </div>
+
+        <div class="lipstick"></div>
+
+    </div>
+
+</section>
+
+
+<section class="benefits">
+
+    <div class="benefit">
+        <strong>Curated Products</strong>
+        <span>
+            Selected beauty and fragrance favourites
+        </span>
+    </div>
+
+    <div class="benefit">
+        <strong>Easy Ordering</strong>
+        <span>
+            Add products to your bag and order easily
+        </span>
+    </div>
+
+    <div class="benefit">
+        <strong>Kenya Delivery</strong>
+        <span>
+            Delivery options for customers across Kenya
+        </span>
+    </div>
+
+</section>
+
+
+<section class="section" id="categories">
+
+    <div class="section-title">
+
+        <p class="eyebrow">
+            SHOP BY CATEGORY
+        </p>
+
+        <h2>
+            Find your favourites.
+        </h2>
+
+    </div>
+
+
+    <div class="category-grid">
+
+        <button class="category" onclick="filterProducts('Perfumes')">
+
+            <div class="category-icon">
+                ✦
+            </div>
+
+            <h3>
+                Perfumes
+            </h3>
+
+            <p>
+                Fragrances for women and men
+            </p>
+
+        </button>
+
+
+        <button class="category" onclick="filterProducts('Body Care')">
+
+            <div class="category-icon">
+                ♡
+            </div>
+
+            <h3>
+                Body Care
+            </h3>
+
+            <p>
+                Lotions, mists and body oils
+            </p>
+
+        </button>
+
+
+        <button class="category" onclick="filterProducts('Skincare')">
+
+            <div class="category-icon">
+                ◌
+            </div>
+
+            <h3>
+                Skincare
+            </h3>
+
+            <p>
+                Daily skincare essentials
+            </p>
+
+        </button>
+
+
+        <button class="category" onclick="filterProducts('Beauty')">
+
+            <div class="category-icon">
+                ✧
+            </div>
+
+            <h3>
+                Beauty
+            </h3>
+
+            <p>
+                Makeup and accessories
+            </p>
+
+        </button>
+
+    </div>
+
+</section>
+
+
+<section class="section" id="shop">
+
+    <div class="section-title">
+
+        <p class="eyebrow">
+            ONLINE SHOP
+        </p>
+
+        <h2>
+            Featured Products
+        </h2>
+
+    </div>
+
+
+    <div class="filters">
+
+        <button class="filter active"
+                onclick="filterProducts('All')">
+            All
+        </button>
+
+        <button class="filter"
+                onclick="filterProducts('Perfumes')">
+            Perfumes
+        </button>
+
+        <button class="filter"
+                onclick="filterProducts('Body Care')">
+            Body Care
+        </button>
+
+        <button class="filter"
+                onclick="filterProducts('Skincare')">
+            Skincare
+        </button>
+
+        <button class="filter"
+                onclick="filterProducts('Beauty')">
+            Beauty
+        </button>
+
+    </div>
+
+
+    <div class="product-grid" id="productGrid">
+    </div>
+
+</section>
+
+
+<section class="promo">
+
+    <p class="eyebrow">
+        GIFTS & OCCASIONS
+    </p>
+
+    <h2>
+        Make the next gift memorable.
+    </h2>
+
+    <p>
+        Ask about perfume combinations and beauty bundles
+        for birthdays, anniversaries and special occasions.
+    </p>
+
+</section>
+
+
+<section class="section about" id="about">
+
+    <div class="about-box">
+
+        <p class="eyebrow">
+            ABOUT MAGNET STORE KENYA
+        </p>
+
+        <h2>
+            Your beauty. Your fragrance. Your style.
+        </h2>
+
+        <p>
+            Magnet Store Kenya is a beauty and fragrance store
+            offering perfumes, skincare, body care and beauty
+            products for customers in Kenya.
+        </p>
+
+    </div>
+
+
+    <div class="steps">
+
+        <div class="step">
+            <strong>01</strong>
+            Choose your products
+        </div>
+
+        <div class="step">
+            <strong>02</strong>
+            Add them to your bag
+        </div>
+
+        <div class="step">
+            <strong>03</strong>
+            Checkout or order via WhatsApp
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="contact" id="contact">
+
+    <div>
+
+        <p class="eyebrow">
+            CONTACT MAGNET STORE
+        </p>
+
+        <h2>
+            Ready to order?
+        </h2>
+
+        <p>
+            Contact us for product availability, delivery
+            and special orders.
+        </p>
+
+    </div>
+
+
+    <div>
+
+        <div class="contact-box">
+
+            <small>
+                WHATSAPP
+            </small>
+
+            <strong>
+                +254 743 046 135
+            </strong>
+
+        </div>
+
+
+        <div class="contact-box">
+
+            <small>
+                EMAIL
+            </small>
+
+            <strong>
+                orders@magnetstorekenya.co.ke
+            </strong>
+
+        </div>
+
+
+        <div class="contact-box">
+
+            <small>
+                DELIVERY
+            </small>
+
+            <strong>
+                Kenya-wide delivery
+            </strong>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <div>
+        <strong>
+            Magnet Store Kenya
+        </strong>
+
+        <br>
+
+        Beauty • Perfumes • Self-care
+    </div>
+
+    <div>
+        © 2026 Magnet Store Kenya
+    </div>
+
+</footer>
+
+
+<!-- CART -->
+
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+
+
+<div class="cart" id="cart">
+
+    <div class="cart-header">
+
+        <h2>
+            Your Bag
+        </h2>
+
+        <button class="close-cart"
+                onclick="closeCart()">
+            ×
+        </button>
+
+    </div>
+
+
+    <div class="cart-items"
+         id="cartItems">
+
+    </div>
+
+
+    <div class="cart-footer">
+
+        <div class="cart-total">
+
+            <span>
+                Total
+            </span>
+
+            <strong id="cartTotal">
+                KSh 0
+            </strong>
+
+        </div>
+
+        <button class="checkout-button"
+                onclick="openCheckout()">
+            Checkout
+        </button>
+
+        <button class="whatsapp-button"
+                onclick="orderWhatsApp()">
+            Order via WhatsApp
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- CHECKOUT -->
+
+<div class="modal" id="checkoutModal">
+
+    <div class="modal-content">
+
+        <button class="close-modal"
+                onclick="closeCheckout()">
+            ×
+        </button>
+
+        <h2>
+            Checkout
+        </h2>
+
+        <p>
+            Enter your details below to place your order.
+        </p>
+
+
+        <form id="checkoutForm">
+
+            <label>
+                Full Name
+
+                <input
+                    type="text"
+                    name="name"
+                    placeholder="Your full name"
+                    required>
+            </label>
+
+
+            <label>
+                Phone Number
+
+                <input
+                    type="tel"
+                    name="phone"
+                    placeholder="07XXXXXXXX"
+                    required>
+            </label>
+
+
+            <label>
+                Email
+
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="you@example.com">
+            </label>
+
+
+            <label>
+                Delivery Location
+
+                <input
+                    type="text"
+                    name="location"
+                    placeholder="e.g. Kilimani, Nairobi"
+                    required>
+            </label>
+
+
+            <label>
+                Payment Method
+
+                <select name="payment">
+
+                    <option>
+                        M-Pesa
+                    </option>
+
+                    <option>
+                        Card
+                    </option>
+
+                    <option>
+                        Cash on Delivery
+                    </option>
+
+                </select>
+
+            </label>
+
+
+            <label>
+                Additional Notes
+
+                <textarea
+                    name="notes"
+                    rows="4"
+                    placeholder="Any special instructions?">
+                </textarea>
+
+            </label>
+
+
+            <button
+                type="submit"
+                class="submit-order">
+
+                Submit Order
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* =========================
+       PRODUCT DATABASE
+    ========================= */
+
+    const products = [
+
+        {
+            id: 1,
+            name: "Signature Rose Eau de Parfum",
+            category: "Perfumes",
+            price: 3500,
+            color: "pink",
+            description:
+                "Elegant floral fragrance for everyday wear."
+        },
+
+        {
+            id: 2,
+            name: "Vanilla Glow Perfume",
+            category: "Perfumes",
+            price: 2800,
+            color: "gold",
+            description:
+                "Warm, sweet and cosy fragrance."
+        },
+
+        {
+            id: 3,
+            name: "Midnight Oud",
+            category: "Perfumes",
+            price: 4200,
+            color: "black",
+            description:
+                "Deep woody fragrance for evenings."
+        },
+
+        {
+            id: 4,
+            name: "Bloom Body Mist",
+            category: "Body Care",
+            price: 1800,
+            color: "purple",
+            description:
+                "Fresh body mist for daily use."
+        },
+
+        {
+            id: 5,
+            name: "Shea Body Lotion",
+            category: "Body Care",
+            price: 1500,
+            color: "gold",
+            description:
+                "Moisturising body lotion."
+        },
+
+        {
+            id: 6,
+            name: "Daily Glow Moisturiser",
+            category: "Skincare",
+            price: 2200,
+            color: "green",
+            description:
+                "Daily moisturiser for smooth skin."
+        },
+
+        {
+            id: 7,
+            name: "Lip & Cheek Tint",
+            category: "Beauty",
+            price: 1200,
+            color: "pink",
+            description:
+                "Easy colour for lips and cheeks."
+        },
+
+        {
+            id: 8,
+            name: "Beauty Essentials Set",
+            category: "Beauty",
+            price: 3200,
+            color: "black",
+            description:
+                "Starter set of beauty essentials."
+        }
+
+    ];
+
+
+    let cart = [];
+
+
+    /* =========================
+       DISPLAY PRODUCTS
+    ========================= */
+
+    function displayProducts(category = "All") {
+
+        const grid =
+            document.getElementById("productGrid");
+
+        let filtered = products;
+
+        if (category !== "All") {
+
+            filtered =
+                products.filter(
+                    product =>
+                        product.category === category
+                );
+
+        }
+
+
+        grid.innerHTML = "";
+
+
+        filtered.forEach(product => {
+
+            grid.innerHTML += `
+
+                <div class="product">
+
+                    <div class="product-image">
+
+                        <div class="
+                            product-bottle
+                            ${product.color}
+                        ">
+
+                            MAGNET
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="product-details">
+
+                        <div class="product-category">
+
+                            ${product.category}
+
+                        </div>
+
+
+                        <h3>
+
+                            ${product.name}
+
+                        </h3>
+
+
+                        <p>
+
+                            ${product.description}
+
+                        </p>
+
+
+                        <div class="product-bottom">
+
+                            <span class="price">
+
+                                KSh
+                                ${product.price.toLocaleString()}
+
+                            </span>
+
+
+                            <button
+                                class="add-button"
+                                onclick="addToCart(${product.id})">
+
+                                Add to Bag
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        });
+
+    }
+
+
+    /* =========================
+       FILTER
+    ========================= */
+
+    function filterProducts(category) {
+
+        displayProducts(category);
+
+        document
+            .getElementById("shop")
+            .scrollIntoView({
+                behavior: "smooth"
+            });
+
+    }
+
+
+    /* =========================
+       ADD TO CART
+    ========================= */
+
+    function addToCart(productId) {
+
+        const product =
+            products.find(
+                item => item.id === productId
+            );
+
+
+        const existing =
+            cart.find(
+                item => item.id === productId
+            );
+
+
+        if (existing) {
+
+            existing.quantity++;
+
+        }
+
+        else {
+
+            cart.push({
+
+                ...product,
+
+                quantity: 1
+
+            });
+
+        }
+
+
+        updateCart();
+
+
+        openCart();
+
+    }
+
+
+    /* =========================
+       UPDATE CART
+    ========================= */
+
+    function updateCart() {
+
+        const cartItems =
+            document.getElementById("cartItems");
+
+        const cartCount =
+            document.getElementById("cartCount");
+
+        const cartTotal =
+            document.getElementById("cartTotal");
+
+
+        cartItems.innerHTML = "";
+
+
+        let total = 0;
+
+        let count = 0;
+
+
+        cart.forEach(item => {
+
+            total +=
+                item.price *
+                item.quantity;
+
+            count +=
+                item.quantity;
+
+
+            cartItems.innerHTML += `
+
+                <div class="cart-item">
+
+                    <div
+                        class="
+                        cart-thumb
+                        ${item.color}
+                        ">
+
+                        M
+
+                    </div>
+
+
+                    <div>
+
+                        <h4>
+                            ${item.name}
+                        </h4>
+
+                        <p>
+                            KSh
+                            ${item.price.toLocaleString()}
+                        </p>
+
+
+                        <div class="quantity">
+
+                            <button
+                                onclick="
+                                changeQuantity(
+                                    ${item.id},
+                                    -1
+                                )">
+
+                                -
+
+                            </button>
+
+
+                            <span>
+
+                                ${item.quantity}
+
+                            </span>
+
+
+                            <button
+                                onclick="
+                                changeQuantity(
+                                    ${item.id},
+                                    1
+                                )">
+
+                                +
+
+                            </button>
+
+
+                            <button
+                                class="remove"
+                                onclick="
+                                removeFromCart(
+                                    ${item.id}
+                                )">
+
+                                Remove
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <strong>
+
+                        KSh
+                        ${(
+                            item.price *
+                            item.quantity
+                        ).toLocaleString()}
+
+                    </strong>
+
+                </div>
+
+            `;
+
+        });
+
+
+        cartCount.textContent = count;
+
+
+        cartTotal.textContent =
+            "KSh " +
+            total.toLocaleString();
+
+    }
+
+
+    /* =========================
+       CHANGE QUANTITY
+    ========================= */
+
+    function changeQuantity(
+        productId,
+        amount
+    ) {
+
+        const item =
+            cart.find(
+                item => item.id === productId
+            );
+
+
+        if (!item) return;
+
+
+        item.quantity += amount;
+
+
+        if (item.quantity <= 0) {
+
+            cart =
+                cart.filter(
+                    item =>
+                        item.id !== productId
+                );
+
+        }
+
+
+        updateCart();
+
+    }
+
+
+    /* =========================
+       REMOVE
+    ========================= */
+
+    function removeFromCart(productId) {
+
+        cart =
+            cart.filter(
+                item =>
+                    item.id !== productId
+            );
+
+
+        updateCart();
+
+    }
+
+
+    /* =========================
+       OPEN CART
+    ========================= */
+
+    function openCart() {
+
+        document
+            .getElementById("cart")
+            .classList.add("open");
+
+
+        document
+            .getElementById("overlay")
+            .classList.add("show");
+
+    }
+
+
+    /* =========================
+       CLOSE CART
+    ========================= */
+
+    function closeCart() {
+
+        document
+            .getElementById("cart")
+            .classList.remove("open");
+
+
+        document
+            .getElementById("overlay")
+            .classList.remove("show");
+
+    }
+
+
+    /* =========================
+       CHECKOUT
+    ========================= */
+
+    function openCheckout() {
+
+        if (cart.length === 0) {
+
+            alert(
+                "Your bag is empty."
+            );
+
+            return;
+
+        }
+
+
+        document
+            .getElementById("checkoutModal")
+            .classList.add("show");
+
+    }
+
+
+    function closeCheckout() {
+
+        document
+            .getElementById("checkoutModal")
+            .classList.remove("show");
+
+    }
+
+
+    /* =========================
+       WHATSAPP ORDER
+    ========================= */
+
+    function orderWhatsApp() {
+
+        if (cart.length === 0) {
+
+            alert(
+                "Your bag is empty."
+            );
+
+            return;
+
+        }
+
+
+        /*
+         IMPORTANT:
+         Replace this number
+         with your real WhatsApp number.
+
+         Format:
+         2547XXXXXXXX
+        */
+
+        const phone =
+            "254743046135";
+
+
+        let message =
+            "Hello Magnet Store Kenya!%0A%0A";
+
+        message +=
+            "I would like to order:%0A";
+
+
+        let total = 0;
+
+
+        cart.forEach(item => {
+
+            const subtotal =
+                item.price *
+                item.quantity;
+
+
+            total += subtotal;
+
+
+            message +=
+
+                "%0A" +
+                "- " +
+                item.name +
+                " x" +
+                item.quantity +
+                " = KSh " +
+                subtotal;
+
+        });
+
+
+        message +=
+
+            "%0A%0ATotal: KSh " +
+            total.toLocaleString();
+
+
+        window.open(
+
+            "https://wa.me/" +
+            phone +
+            "?text=" +
+            message,
+
+            "_blank"
+
+        );
+
+    }
+
+
+    /* =========================
+       CHECKOUT FORM
+    ========================= */
+
+    document
+        .getElementById("checkoutForm")
+        .addEventListener(
+            "submit",
+            function(event) {
+
+                event.preventDefault();
+
+
+                const formData =
+                    new FormData(this);
+
+
+                const name =
+                    formData.get("name");
+
+                const phone =
+                    formData.get("phone");
+
+                const location =
+                    formData.get("location");
+
+
+                /*
+                    For now this sends
+                    the order through WhatsApp.
+
+                    Later this section can
+                    be connected to M-Pesa.
+                */
+
+
+                let message =
+
+                    "Hello Magnet Store Kenya!%0A%0A" +
+
+                    "New Order%0A%0A" +
+
+                    "Customer: " +
+                    name +
+                    "%0A" +
+
+                    "Phone: " +
+                    phone +
+                    "%0A" +
+
+                    "Location: " +
+                    location +
+                    "%0A%0A";
+
+
+                let total = 0;
+
+
+                cart.forEach(item => {
+
+                    const subtotal =
+                        item.price *
+                        item.quantity;
+
+
+                    total += subtotal;
+
+
+                    message +=
+
+                        "- " +
+                        item.name +
+                        " x" +
+                        item.quantity +
+                        " = KSh " +
+                        subtotal +
+                        "%0A";
+
+                });
+
+
+                message +=
+
+                    "%0ATotal: KSh " +
+                    total.toLocaleString();
+
+
+                /*
+                    CHANGE THIS
+                    TO YOUR REAL
+                    WHATSAPP NUMBER.
+                */
+
+                const whatsappNumber =
+                    "254743046135";
+
+
+                window.open(
+
+                    "https://wa.me/" +
+                    whatsappNumber +
+                    "?text=" +
+                    message,
+
+                    "_blank"
+
+                );
+
+            }
+        );
+
+
+    /* =========================
+       INITIALISE
+    ========================= */
+
+    displayProducts();
+
+    updateCart();
+
+</script>
+
+</body>
+</html>
