@@ -521,6 +521,56 @@
             border-radius: 18px;
         }
 
+        /* ADMIN SECTION */
+
+        .admin-section {
+            background: #f4e9e6;
+            border-top: 1px solid #e8ded9;
+            border-bottom: 1px solid #e8ded9;
+        }
+
+        .admin-box {
+            background: white;
+            padding: 40px;
+            border-radius: 25px;
+            border: 1px solid #e8ded9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .admin-box form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .admin-box label {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .admin-box input,
+        .admin-box select,
+        .admin-box textarea {
+            width: 100%;
+            margin-top: 5px;
+            padding: 11px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .admin-btn {
+            background: #743b40;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
         /* CONTACT */
 
         .contact {
@@ -741,10 +791,6 @@
             font-size: 20px;
         }
 
-        form {
-            margin-top: 20px;
-        }
-
         form label {
             display: block;
             margin-bottom: 14px;
@@ -849,6 +895,7 @@
         <a href="#shop">Shop</a>
         <a href="#categories">Categories</a>
         <a href="#about">About</a>
+        <a href="#admin" onclick="openAdmin(event)">Admin</a>
         <a href="#contact">Contact</a>
     </nav>
 
@@ -1147,6 +1194,73 @@
 </section>
 
 
+<!-- ADMIN PANEL -->
+
+<section class="section admin-section" id="admin" style="display: none;">
+
+    <div class="section-title" style="text-align: center;">
+
+        <p class="eyebrow">
+            ADMIN DASHBOARD
+        </p>
+
+        <h2>
+            Add New Product
+        </h2>
+
+    </div>
+
+    <div class="admin-box">
+
+        <form id="addProductForm">
+
+            <label>
+                Product Name
+                <input type="text" id="prodName" placeholder="e.g. Lavender Night Perfume" required>
+            </label>
+
+            <label>
+                Category
+                <select id="prodCategory" required>
+                    <option value="Perfumes">Perfumes</option>
+                    <option value="Body Care">Body Care</option>
+                    <option value="Skincare">Skincare</option>
+                    <option value="Beauty">Beauty</option>
+                </select>
+            </label>
+
+            <label>
+                Price (KSh)
+                <input type="number" id="prodPrice" placeholder="e.g. 3500" required>
+            </label>
+
+            <label>
+                Bottle/Theme Color
+                <select id="prodColor" required>
+                    <option value="pink">Pink</option>
+                    <option value="gold">Gold</option>
+                    <option value="black">Black</option>
+                    <option value="purple">Purple</option>
+                    <option value="green">Green</option>
+                </select>
+            </label>
+
+            <label>
+                Description
+                <textarea id="prodDesc" rows="3" placeholder="Brief description of the product" required></textarea>
+            </label>
+
+            <button type="submit" class="admin-btn">
+                Add Product to Store
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+
 <section class="contact" id="contact">
 
     <div>
@@ -1407,7 +1521,7 @@
        PRODUCT DATABASE
     ========================= */
 
-    const products = [
+    const initialProducts = [
 
         {
             id: 1,
@@ -1491,8 +1605,54 @@
 
     ];
 
+    // Load products from localStorage or use initial set
+    let products = JSON.parse(localStorage.getItem('magnet_products')) || initialProducts;
 
     let cart = [];
+
+
+    /* =========================
+       ADMIN SECTION
+    ========================= */
+
+    function openAdmin(e) {
+        e.preventDefault();
+        const adminSection = document.getElementById("admin");
+
+        if (adminSection.style.display === "none" || adminSection.style.display === "") {
+            const password = prompt("Enter Admin Password:");
+            if (password === "admin123") {
+                adminSection.style.display = "block";
+                adminSection.scrollIntoView({ behavior: "smooth" });
+            } else if (password !== null) {
+                alert("Incorrect Password!");
+            }
+        } else {
+            adminSection.scrollIntoView({ behavior: "smooth" });
+        }
+    }
+
+    document.getElementById("addProductForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const newProduct = {
+            id: Date.now(),
+            name: document.getElementById("prodName").value,
+            category: document.getElementById("prodCategory").value,
+            price: parseFloat(document.getElementById("prodPrice").value),
+            color: document.getElementById("prodColor").value,
+            description: document.getElementById("prodDesc").value
+        };
+
+        products.push(newProduct);
+        localStorage.setItem('magnet_products', JSON.stringify(products));
+
+        displayProducts();
+        this.reset();
+        alert("Product added successfully!");
+
+        document.getElementById("shop").scrollIntoView({ behavior: "smooth" });
+    });
 
 
     /* =========================
@@ -1934,15 +2094,6 @@
         }
 
 
-        /*
-         IMPORTANT:
-         Replace this number
-         with your real WhatsApp number.
-
-         Format:
-         2547XXXXXXXX
-        */
-
         const phone =
             "254743046135";
 
@@ -2027,15 +2178,6 @@
                     formData.get("location");
 
 
-                /*
-                    For now this sends
-                    the order through WhatsApp.
-
-                    Later this section can
-                    be connected to M-Pesa.
-                */
-
-
                 let message =
 
                     "Hello Magnet Store Kenya!%0A%0A" +
@@ -2086,12 +2228,6 @@
                     "%0ATotal: KSh " +
                     total.toLocaleString();
 
-
-                /*
-                    CHANGE THIS
-                    TO YOUR REAL
-                    WHATSAPP NUMBER.
-                */
 
                 const whatsappNumber =
                     "254743046135";
