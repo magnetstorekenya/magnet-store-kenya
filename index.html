@@ -250,6 +250,7 @@
             <h2>Admin Control Center</h2>
             <div>
                 <button id="changeAdminPwdBtn" class="action-btn-sm" style="background:#ad666b; color:white; padding:6px 12px; margin-right:5px;">🔑 Change Password</button>
+                <button id="closeAdminBtn" class="action-btn-sm" style="background:#191513; color:white; padding:6px 12px;">✕ Close Panel</button>
             </div>
         </div>
 
@@ -329,13 +330,16 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
   import { getDatabase, ref, onValue, push, update, remove, set } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
 
+  // Your exact Firebase project configuration
   const firebaseConfig = {
     apiKey: "AIzaSyAPfYjbeIuc3_tphgik2gnuWvSv-kt3Tos",
-    authDomain: "magnet-store-kenya.firebaseapp.com",
-    projectId: "magnet-store-kenya",
-    storageBucket: "magnet-store-kenya.firebasestorage.app",
-    messagingSenderId: "45589904684",
-    appId: "1:45589904684:web:b61c02d94adb423fd90089"
+    authDomain: "magnet-store-kenya-ae4cb.firebaseapp.com",
+    projectId: "magnet-store-kenya-ae4cb",
+    storageBucket: "magnet-store-kenya-ae4cb.firebasestorage.app",
+    messagingSenderId: "908122427865",
+    appId: "1:908122427865:web:e6eb9383d54219bd4349c8",
+    measurementId: "G-77BYJ5ZDCH",
+    databaseURL: "https://magnet-store-kenya-ae4cb-default-rtdb.firebaseio.com"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -347,151 +351,75 @@
   let activePromoDiscount = 0;
   let currentCategory = "All";
 
-  // Full Catalog Preset Array at 6,500 KSh
+  // Catalog Array Preset
   const catalogTemplate = [
-      // Amouage
       "Amouage Epic Man", "Amouage Gold Woman", "Amouage Interlude Woman", "Amouage Love Mimosa EDP", "Amouage Memoir",
-      // Anna Sui
       "Anna Sui Fantasia EDT", "Anna Sui Sky",
-      // Ariana Grande
       "Ariana Grande Cloud", "Ariana Grande Cloud 2.0 Intense", "Ariana Grande Sweet Like Candy",
-      // Armaf
       "Armaf Club De Nuit Imperial", "Armaf Club De Nuit Intense Man", "Armaf Club De Nuit Intense Woman", "Armaf Club De Nuit Parfum – A Collector's Pride", "Armaf Club De Nuit Sillage", "Armaf Club De Nuit Untold", "Armaf Club De Nuit Urban Man", "Armaf Club De Nuit Woman",
-      // BOSS / Hugo Boss
       "Boss Bottled", "Boss Bottled Bold Citrus EDP", "Boss Bottled Collector's Edition", "Boss Bottled Elixir", "Boss Bottled Infinite EDP", "Boss Bottled Limited", "Boss Bottled Oud", "Boss Bottled Tonic", "Boss EDT", "Boss Hugo Boss EDT", "Boss Hugo Boss Intense", "Boss Just Different", "Boss The Scent Intense",
-      // Burberry
       "Burberry Brit For Him EDT", "Burberry Brit Sheer For Her", "Burberry Goddess", "Burberry Hero EDP", "Burberry Her EDP", "Burberry London For Men EDT", "Burberry London For Women EDP", "Burberry Mr. Burberry", "My Burberry Black", "My Burberry Black Tie", "My Burberry Blush Limited Edition",
-      // BVLGARI
       "Bvlgari Man Terrae Essence", "Bvlgari Man Wood Essence", "Bvlgari Pour Homme", "Splendida Jasmin Noir", "Splendida Magnolia Sensuel", "Wood Neroli EDP",
-      // Calvin Klein
       "CK Be", "CK One", "Eternity", "Euphoria Liquid Gold EDP", "Euphoria Women",
-      // Carolina Herrera
       "212 Rose – Are You on the List NYC?", "212 Sexy", "Bad Boy Cobalt EDP Electrique", "Bad Boy Cobalt EDP Elixir", "Good Girl", "Good Girl Blush", "Good Girl Collector Edition", "Good Girl Collector Golden Edition", "Good Girl Dazzling Garden", "Good Girl Sparkling Ice", "Good Girl Supreme", "Good Girl – It's Good to Be Bad", "Good Girl Lucky Charm", "Me First", "Very Good Girl", "Very Good Girl Glam",
-      // Cartier
       "La Panthère Parfum",
-      // Chanel
       "Allure EDP", "Allure Homme Edition Blanche EDP", "Allure Homme Sport Cologne", "Allure Homme Sport EDT", "Allure Homme Sport Eau Extreme", "Bleu de Chanel EDT Pour Homme", "Bleu de Chanel EDP Pour Homme", "Bleu de Chanel Parfum Pour Homme", "Chance", "Chance Eau Splendide", "Chance Eau Tendre", "Chance EDP", "Coco EDP", "Coco Mademoiselle EDP", "Coco Mademoiselle Intense", "Coco Mademoiselle Eau Pour La Nuit", "Coco Noir EDP", "Gabrielle Chanel", "N°1 de Chanel L'Eau Rouge", "N°5", "N°5 L'Eau", "N°5 L'Eau Red Edition", "N°19 EDP",
-      // Chloé
       "Chloé EDP – Big", "Chloé EDP – Small",
-      // Clinique
       "Clinique Happy",
-      // Creed
       "Creed Aventus", "Creed Green Irish Tweed", "Creed Himalaya", "Creed Love in Black", "Creed Millésime Impérial", "Creed Royal Mayfair", "Creed Royal Princess Oud", "Creed Silver Mountain Water", "Creed Viking",
-      // Dolce & Gabbana
       "Anthology La Roue de La Fortune 10", "Devotion EDP", "Devotion Pour Homme", "K EDT", "K Pour Homme EDP Intense", "Laila Malaki", "Light Blue Eau Pour Homme", "Light Blue Italian Zest", "Light Blue Love Is Love Pour Femme", "Light Blue Pour Homme Summer Vibes", "Pour Femme EDP", "Q EDP", "The One EDT", "The One EDP", "The One Desire EDP Intense", "The One Gold Intense", "The One Luminous Night", "The One Mysterious Night", "The One Only", "The One Only EDP", "The One Pour Homme EDT", "The One For Men Intense", "The One For Men Baroque Collector EDT",
-      // Davidoff
       "Cool Water Reborn EDP Intense", "Cool Water Sea Rose Woman EDT", "Cool Water Woman",
-      // Dior
       "Addict EDP", "Ambre Nuit EDP", "Balade Sauvage EDP", "Bois d'Argent", "Dioriviera", "Eden-Roc", "Fahrenheit", "Gris Dior EDP", "Homme EDT", "Homme Intense", "Homme Le Nouveau Parfum", "Homme Parfum", "Homme Sport", "Hypnotic Poison EDP", "Hypnotic Poison EDT", "J'adore", "J'adore EDT", "J'adore In Joy", "J'adore Parfum d'Eau", "Joy", "La Colle Noire", "Lucky EDP", "Midnight Poison", "Miss Dior Blooming Bouquet EDT", "Miss Dior EDP", "Miss Dior Parfum", "Miss Dior Absolutely Blooming", "Miss Dior Rose Essence – Big", "Miss Dior Rose Essence – Small", "Miss Dior Rose N'Roses", "Miss Dior Silky Body Mist", "New Look", "Oud Ispahan EDP", "Oud Rosewood EDP", "Poison EDP", "Poison Girl EDP", "Poison Girl EDT", "Pure Poison EDP", "Purple Oud EDP", "Rose Gipsy", "Rose Kabuki", "Sakura EDP", "Sauvage EDP", "Sauvage EDP Nouveau", "Sauvage Parfum", "Sauvage Elixir", "Sauvage Eau Forte", "The Cachemire",
-      // Diptyque
-      "Do Son EDT", "L'Eau EDT",
-      // Dunhill
-      "Desire For A Man EDT", "Signature Collection Amalfi Citrus", "Signature Collection Indian Sandalwood", "Signature Collection Moroccan Amber", "Signature Collection Valensole Lavender",
-      // Emporio Armani
+      "Do Son EDT", "L'Eau EDT", "Desire For A Man EDT", "Signature Collection Amalfi Citrus", "Signature Collection Indian Sandalwood", "Signature Collection Moroccan Amber", "Signature Collection Valensole Lavender",
       "Because It's You", "Stronger With You", "Stronger With You Absolutely", "Stronger With You Amber", "Stronger With You Freeze", "Stronger With You Intensely", "Stronger With You Only", "Stronger With You Oud", "Stronger With You Parfum", "Stronger With You Pour Homme EDT", "Stronger With You Sandalwood", "Stronger With You Tobacco",
-      // Escentric Molecules
-      "Escentric 02", "Escentric 05",
-      // Estée Lauder
-      "Pleasures Bloom",
-      // Ex Nihilo
-      "Lust In Paradise",
-      // Ferrari
-      "Scuderia Ferrari Red",
-      // Givenchy
+      "Escentric 02", "Escentric 05", "Pleasures Bloom", "Lust In Paradise", "Scuderia Ferrari Red",
       "Hot Couture EDT", "Irresistible", "Irresistible Very Floral", "L'Interdit EDP", "L'Interdit Absolu", "L'Interdit Burnine Neroli", "L'Interdit EDP Intense", "L'Interdit Tubéreuse Noire", "L'Interdit Eau de Parfum Rouge Ultime", "Xeryus Rouge EDT", "Ysatis EDT",
-      // Giorgio Armani
       "Acqua di Giò Absolu", "Acqua di Giò EDT", "Acqua di Giò Profondo EDP", "Acqua di Giò Profumo", "Armani Code", "Armani Code A-List", "Armani Code EDP Pour Homme", "Armani Code Profumo", "A Milano Armani Privé", "Figuier Eden", "Jasmin Kusamono", "My Way EDP", "My Way Floral", "My Way Nectar", "My Way Ylang EDP", "Noir Kogane", "Oud Royal EDP Intense", "Privé Vert Malachite", "Sì EDP", "Sì EDP Intense", "Sì Fiori EDP", "Sì Parfum", "Sì Passione", "Sì Passione Intense", "Vétiver d'Hiver",
-      // Gissah
       "Gissah One and Only",
-      // Gucci
       "Bamboo Limited Edition", "Bloom", "Bloom Acqua di Fiori", "Bloom EDP", "Bloom Intense", "Bloom Profumo di Fiori", "EDP 2", "Flora EDP", "Flora Gorgeous Gardenia EDP", "Flora Gorgeous Gardenia EDT", "Flora Gorgeous Gardenia EDT Bella", "Flora Gorgeous Gardenia EDP Intense", "Flora Gorgeous Magnolia EDP", "Flora Gorgeous Orchid EDP", "Flora Limited Edition Gorgeous Gardenia EDT", "Guilty Absolute Pour Femme EDP", "Guilty Absolute Pour Homme", "Guilty EDT", "Guilty Elixir de Parfum Pour Femme", "Guilty Elixir de Parfum Pour Homme", "Guilty Essence Pour Homme", "Guilty Love Edition Pour Femme", "Guilty Love Edition Pour Femme 2024", "Guilty Love Edition Pour Homme", "Guilty Oud EDP", "Guilty Pour Homme EDT", "Guilty Pour Homme Parfum", "Gucci Pour Homme EDT",
-      // Guerlain
       "Épices Exquises Absolus Allegoria", "Habit Rouge EDP", "L'Homme Idéal L'Intense", "La Petite Robe Noire EDT", "La Petite Robe Noire EDP", "Oud Essentiel Absolus Allegoria", "Santal Royal Absolus Allegoria", "Shalimar EDP",
-      // Hermès
       "Barénia EDP", "H24 EDP", "Twilly d'Hermès",
-      // Issey Miyake
       "L'Eau Majeure d'Issey", "Nuit d'Issey Noir Argent", "Issey Miyake Pour Homme",
-      // Jean Paul Gaultier
       "Gaultier Divine", "Le Beau", "Le Male Elixir", "Le Male Lover", "Scandal EDP", "Scandal Le Parfum", "So Scandal EDP", "Ultra Male", "JPG² EDP",
-      // Jo Malone London
       "Blackberry & Bay Cologne", "English Pear & Freesia Cologne", "Peony & Blush Suede", "Red Roses Cologne", "Wild Bluebell",
-      // KAYALI
       "Deja Vu White Flower 57", "Eden Sparkling Lychee 39", "Fleur Majesty Rose Royale 31", "Vanilla Candy Rock Sugar 42",
-      // Kilian
       "Apple Brandy on the Rocks", "Black Phantom Memento Mori EDP", "Blue Moon Ginger Dash", "Good Girl Gone Bad EDP", "Good Girl Gone Bad Extreme", "Imperial Tea 2024", "Sacred Wood EDP", "Smoking Hot", "Voulez-Vous Coucher Avec Moi",
-      // Lacoste
       "Lacoste Blanc", "Lacoste Blanc-Pure", "Challenge Pour Homme EDT", "L'Homme EDT", "Lacoste Pour Homme EDT", "Pour Lui Magnetic", "Original EDP", "Lacoste Rouge", "Lacoste Yellow",
-      // Lalique
       "Encre Indigo", "Encre Noire EDT", "Encre Noire Pour Homme EDT",
-      // Lancôme
       "Idôle", "Idôle Le Grand Parfum", "Idôle Power Intense", "La Vie Est Belle", "La Vie Est Belle L'Eau de Parfum", "La Vie Est Belle Flowers of Happiness", "La Vie Est Belle Iris Absolu", "La Vie Est Belle L'Elixir", "La Vie Est Belle L'Extrait", "La Vie Est Belle Vanille Nude", "Magnolia Rosae", "Miracle Blossom", "Oud Bouquet", "Peut-Être EDP", "Trésor Midnight Rose",
-      // Laverne
       "Jameela EDP", "Sense EDP",
-      // Louis Vuitton
       "Louis Vuitton Apogée", "Louis Vuitton Le Jour Se Lève", "Louis Vuitton Mille Feux", "Louis Vuitton Spell On You",
-      // Maison Francis Kurkdjian
       "À La Rose", "Baccarat Rouge 540 EDP", "Baccarat Rouge 540 Extrait", "Oud Silk Mood",
-      // Maison Martin Margiela
-      "Across Sands", "Flying",
-      // Mancera
-      "Gold Intensive Aoud", "Pearl", "Purple Flowers", "Red Tobacco",
-      // Marc Jacobs
-      "Decadence One Eight K Edition",
-      // MCM
-      "Ultra MCM",
-      // Miu Miu
-      "L'Eau Bleue", "L'Eau Rosée",
-      // Montblanc
+      "Across Sands", "Flying", "Gold Intensive Aoud", "Pearl", "Purple Flowers", "Red Tobacco",
+      "Decadence One Eight K Edition", "Ultra MCM", "L'Eau Bleue", "L'Eau Rosée",
       "Explorer Ultra Blue EDP", "Montblanc Signature", "Signature Elixir",
-      // Moschino
       "Toy 2", "Toy 2 Bubble Gum", "Toy 2 Pearl", "Toy Boy",
-      // Narciso Rodriguez
       "Fleur Musc For Her", "For Her EDP", "For Her EDT", "For Her EDT Limited Edition", "For Her L'Absolu", "Musc Noir For Her EDP", "Pure Musc For Her", "Radiant Magnolia EDP Intense", "Rose Épicée EDP Intense",
-      // Nina Ricci
       "Les Belles de Nina",
-      // Paco Rabanne
       "Black XS For Her", "Invictus EDT", "Invictus Legend", "Invictus Legend EDP", "Invictus Parfum EDP", "Lady Million Lucky", "Million Gold EDP Intense", "Million Gold Elixir Parfum Intense", "Million Golden Oud Intense", "Olympea", "Olympea Blossom Florale EDP", "One Million EDT", "One Million Parfum", "One Million Golden Oud Intense", "Phantom", "Phantom EDP Intense",
-      // Parfums de Marly
       "Athalia", "Cassili", "Delina", "Delina La Rosée", "Delina Limited Edition", "Delina Royal Essence", "Godolphin", "Herod", "Layton Royal Essence", "Nisean", "Oriana", "Palatine EDP", "Pegasus Exclusif", "Safanad", "Valaya Exclusif Parfum",
-      // Penhaligon's
       "Roaring Radcliff Portraits",
-      // Prada
-      "Candy EDP", "Luna Rossa Black", "Paradigme EDP", "Paradoxe EDP", "Paradoxe Radical Essence Parfum", "Paradoxe Virtual Flower",
-      // Ralph Lauren
+      "Candy EDP", "Luna Rossa Black", "Paradigm EDP", "Paradoxe EDP", "Paradoxe Radical Essence Parfum", "Paradoxe Virtual Flower",
       "Polo Black", "Polo Red", "Polo Supreme Oud",
-      // Richard
-      "Richard Secret Side",
-      // Serge Lutens
-      "Nuit de Cellophane",
-      // Shaik
-      "Chic Shaik No. 30", "Soleil Thé",
-      // Kenzo
-      "Kenzo Perfume",
-      // Stella McCartney
-      "Stella EDP",
-      // Tiziana Terenzi
-      "Gumin", "Tuttle",
-      // Tom Ford
+      "Richard Secret Side", "Nuit de Cellophane", "Chic Shaik No. 30", "Soleil Thé", "Kenzo Perfume", "Stella EDP", "Gumin", "Tuttle",
       "Tom Ford Bitter Peach", "Tom Ford Black Orchid EDP", "Tom Ford Black Orchid EDT", "Tom Ford Cherry Smoke", "Tom Ford Electric Cherry", "Tom Ford Ebene Fumé", "Tom Ford Fleur de Portofino", "Tom Ford Fucking Fabulous", "Tom Ford Fucking Fabulous Parfum", "Tom Ford Jasmin Rouge", "Tom Ford Lost Cherry", "Tom Ford Mandarino di Amalfi", "Tom Ford Metallique", "Tom Ford Myrrhe Mystère EDP", "Tom Ford Neroli Portofino", "Tom Ford Noir Extreme EDP", "Tom Ford Oud Minérale", "Tom Ford Oud Wood EDP", "Tom Ford Rose Exposed", "Tom Ford Soleil Blanc", "Tom Ford Tobacco Oud", "Tom Ford Tobacco Vanille", "Tom Ford Tuscan Leather", "Tom Ford Vanilla Sex", "Tom Ford Vanille Fatale", "Tom Ford Vanille Fatale 2024", "Tom Ford White Patchouli", "Tom Ford White Suede",
-      // Valentino
       "Donna Born in Roma Coral Fantasy", "Donna Born in Roma Green Stravaganza", "Donna Born in Roma Pink PP", "Donna Born in Roma Yellow Dream", "Uomo Born in Roma Green Stravaganza", "Uomo Born in Roma Yellow Dream", "Uomo Intense EDP", "Valentina", "Valentina Oud Assoluto", "Valentina Rosa Assoluto",
-      // Versace
       "Atelier Éclat de Rose EDP", "Bright Crystal", "Bright Crystal Absolu", "Bright Crystal Pour Femme Parfum", "Crystal Noir", "Crystal Noir EDT", "Eros EDP", "Eros EDT", "Eros Energy", "Eros Flame", "Eros Flame EDP", "Eros Najim Pour Homme", "Eros Parfum", "Eros Pour Femme", "Eros Black", "Man Eau Fraîche Extreme", "Versace Pour Homme", "Versace Pour Homme Dylan Blue",
-      // Victoria's Secret
-      "Bombshell EDP",
-      // Xerjoff
-      "Accento Overdose", "Casamorati Lira", "Coro", "Erba Gold", "Opera",
-      // Yves Saint Laurent
+      "Bombshell EDP", "Accento Overdose", "Casamorati Lira", "Coro", "Erba Gold", "Opera",
       "YSL Black Opium EDP", "YSL Black Opium EDP Gold", "YSL Black Opium Floral Shock", "YSL Black Opium Glitter", "YSL Black Opium Illicit Green", "YSL Black Opium Over Red", "YSL Cinéma", "La Nuit de L'Homme EDP", "La Nuit de L'Homme Le Parfum", "YSL Libre EDP", "YSL Libre Collector Edition", "YSL Libre Collector Edition – Dress Me Wild", "YSL Libre Flowers & Flames", "YSL Libre Intense", "YSL Libre L'Eau Nue", "YSL Libre L'Absolu Platine", "YSL Libre Le Parfum", "YSL Manifesto"
   ];
 
   const dbRef = ref(db, 'products');
+  let isSeeding = false;
+
   onValue(dbRef, async (snapshot) => {
       const data = snapshot.val();
-      if (!data) {
-          // Auto-seed database if empty with all catalog items at KSh 6,500
-          for (let name of catalogTemplate) {
-              await push(ref(db, 'products'), {
+      if (!data && !isSeeding) {
+          isSeeding = true;
+          const seedObj = {};
+          catalogTemplate.forEach(name => {
+              const newKey = push(ref(db, 'products')).key;
+              seedObj[newKey] = {
                   name: name,
                   category: "Perfumes",
                   price: 6500,
@@ -501,9 +429,11 @@
                   image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=500&q=80",
                   notes: "Designer fragrance, premium longevity.",
                   description: `Authentic designer perfume available exclusively at Magnet Store Kenya.`
-              });
-          }
-      } else {
+              };
+          });
+          await set(ref(db, 'products'), seedObj);
+          isSeeding = false;
+      } else if (data) {
           products = Object.keys(data).map(key => ({ id: key, ...data[key] }));
           renderProducts();
       }
@@ -804,6 +734,9 @@
   document.getElementById("overlay").addEventListener("click", closeCart);
   document.getElementById("cancelEditBtn").addEventListener("click", resetForm);
   document.getElementById("changeAdminPwdBtn").addEventListener("click", changeAdminPassword);
+  document.getElementById("closeAdminBtn").addEventListener("click", () => {
+      document.getElementById("admin").style.display = "none";
+  });
   document.getElementById("searchInput").addEventListener("input", renderProducts);
   document.getElementById("sortSelect").addEventListener("change", renderProducts);
 
