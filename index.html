@@ -96,7 +96,7 @@
         .cart-item p { font-size: 11px; color: #777; }
         .quantity { display: flex; align-items: center; gap: 5px; margin-top: 4px; }
         .quantity button { width: 20px; height: 20px; border: 1px solid #ddd; border-radius: 50%; background: white; font-size: 11px; }
-        .cart-footer { padding: 20px; border-top: 1px solid #eee; }
+        .cart-footer { padding: 20px; border-top: 1px solid #eee; max-height: 50vh; overflow-y: auto; }
         .cart-total { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: bold; }
         .discount-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; color: #27ae60; }
         .promo-box { display: flex; gap: 6px; margin-bottom: 12px; }
@@ -231,6 +231,16 @@
     </div>
     <div class="cart-items" id="cartItems"></div>
     <div class="cart-footer">
+        <!-- Delivery Details Form -->
+        <div class="delivery-details" style="margin-bottom: 15px; text-align: left;">
+            <p style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: #743b40;">📍 Delivery Details</p>
+            <input type="text" id="custName" placeholder="Full Name *" style="width: 100%; padding: 8px 12px; margin-bottom: 6px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; outline: none;">
+            <input type="tel" id="custPhone" placeholder="Phone Number *" style="width: 100%; padding: 8px 12px; margin-bottom: 6px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; outline: none;">
+            <input type="text" id="custLocation" placeholder="Delivery Location / Building / Estate *" style="width: 100%; padding: 8px 12px; margin-bottom: 6px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; outline: none;">
+            <textarea id="custNotes" rows="2" placeholder="Delivery notes (optional, e.g. landmark)" style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; outline: none; resize: none;"></textarea>
+        </div>
+
+        <!-- Promo Code Box -->
         <div class="promo-box">
             <input type="text" id="promoInput" placeholder="Promo Code (e.g. MAGNET10)">
             <button id="applyPromoBtn">Apply</button>
@@ -240,7 +250,14 @@
             <strong id="discountAmount">-KSh 0</strong>
         </div>
         <div class="cart-total"><span>Total</span><strong id="cartTotal">KSh 0</strong></div>
-        <button class="btn-full" style="background:#25D366; color:white;" id="orderWhatsAppBtn">Order via WhatsApp</button>
+        
+        <!-- Action Buttons -->
+        <button class="btn-full" style="background:#191513; color:white; margin-bottom:8px;" id="continueShoppingBtn">
+            + Add More Items
+        </button>
+        <button class="btn-full" style="background:#25D366; color:white;" id="orderWhatsAppBtn">
+            Complete Order via WhatsApp
+        </button>
     </div>
 </div>
 
@@ -330,7 +347,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
   import { getDatabase, ref, onValue, push, update, remove, set } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
 
-  // Your exact Firebase project configuration
+  // Exact Firebase project configuration
   const firebaseConfig = {
     apiKey: "AIzaSyAPfYjbeIuc3_tphgik2gnuWvSv-kt3Tos",
     authDomain: "magnet-store-kenya-ae4cb.firebaseapp.com",
@@ -387,8 +404,7 @@
       "Lacoste Blanc", "Lacoste Blanc-Pure", "Challenge Pour Homme EDT", "L'Homme EDT", "Lacoste Pour Homme EDT", "Pour Lui Magnetic", "Original EDP", "Lacoste Rouge", "Lacoste Yellow",
       "Encre Indigo", "Encre Noire EDT", "Encre Noire Pour Homme EDT",
       "Idôle", "Idôle Le Grand Parfum", "Idôle Power Intense", "La Vie Est Belle", "La Vie Est Belle L'Eau de Parfum", "La Vie Est Belle Flowers of Happiness", "La Vie Est Belle Iris Absolu", "La Vie Est Belle L'Elixir", "La Vie Est Belle L'Extrait", "La Vie Est Belle Vanille Nude", "Magnolia Rosae", "Miracle Blossom", "Oud Bouquet", "Peut-Être EDP", "Trésor Midnight Rose",
-      "Jameela EDP", "Sense EDP",
-      "Louis Vuitton Apogée", "Louis Vuitton Le Jour Se Lève", "Louis Vuitton Mille Feux", "Louis Vuitton Spell On You",
+      "Jameela EDP", "Sense EDP", "Louis Vuitton Apogée", "Louis Vuitton Le Jour Se Lève", "Louis Vuitton Mille Feux", "Louis Vuitton Spell On You",
       "À La Rose", "Baccarat Rouge 540 EDP", "Baccarat Rouge 540 Extrait", "Oud Silk Mood",
       "Across Sands", "Flying", "Gold Intensive Aoud", "Pearl", "Purple Flowers", "Red Tobacco",
       "Decadence One Eight K Edition", "Ultra MCM", "L'Eau Bleue", "L'Eau Rosée",
@@ -732,6 +748,7 @@
   document.getElementById("cartBtn").addEventListener("click", openCart);
   document.getElementById("closeCartBtn").addEventListener("click", closeCart);
   document.getElementById("overlay").addEventListener("click", closeCart);
+  document.getElementById("continueShoppingBtn").addEventListener("click", closeCart);
   document.getElementById("cancelEditBtn").addEventListener("click", resetForm);
   document.getElementById("changeAdminPwdBtn").addEventListener("click", changeAdminPassword);
   document.getElementById("closeAdminBtn").addEventListener("click", () => {
@@ -772,20 +789,49 @@
   });
 
   document.getElementById("orderWhatsAppBtn").addEventListener("click", () => {
-      if (cart.length === 0) return alert("Bag is empty.");
-      let msg = "Hello Magnet Store Kenya!%0A%0AI want to order:%0A";
+      if (cart.length === 0) return alert("Your bag is empty.");
+
+      // Retrieve customer inputs
+      const name = document.getElementById("custName").value.trim();
+      const phone = document.getElementById("custPhone").value.trim();
+      const location = document.getElementById("custLocation").value.trim();
+      const notes = document.getElementById("custNotes").value.trim();
+
+      // Basic validation
+      if (!name || !phone || !location) {
+          return alert("Please fill in your Name, Phone Number, and Delivery Location before ordering.");
+      }
+
+      // Format WhatsApp message
+      let msg = `Hello Magnet Store Kenya!%0A%0A`;
+      msg += `👤 *Customer Details:*%0A`;
+      msg += `- Name: ${encodeURIComponent(name)}%0A`;
+      msg += `- Phone: ${encodeURIComponent(phone)}%0A`;
+      msg += `- Location: ${encodeURIComponent(location)}%0A`;
+      if (notes) {
+          msg += `- Notes: ${encodeURIComponent(notes)}%0A`;
+      }
+
+      msg += `%0A🛒 *Order Items:*%0A`;
       let subtotal = 0;
-      
       cart.forEach(i => {
-          msg += `- ${i.name} x${i.quantity} = KSh ${(i.price * i.quantity).toLocaleString()}%0A`;
+          msg += `- ${encodeURIComponent(i.name)} x${i.quantity} = KSh ${(i.price * i.quantity).toLocaleString()}%0A`;
           subtotal += i.price * i.quantity;
       });
 
       let grandTotal = subtotal * (1 - activePromoDiscount / 100);
-      msg += `%0ATotal Amount: KSh ${grandTotal.toLocaleString()}`;
+      msg += `%0A💰 *Total Amount:* KSh ${grandTotal.toLocaleString()}`;
 
+      // Clear cart and inputs
       cart = [];
+      document.getElementById("custName").value = "";
+      document.getElementById("custPhone").value = "";
+      document.getElementById("custLocation").value = "";
+      document.getElementById("custNotes").value = "";
       updateCart();
+      closeCart();
+
+      // Open WhatsApp link
       window.open(`https://wa.me/254743046135?text=${msg}`, "_blank");
   });
 
