@@ -90,14 +90,6 @@
         .modal-content { background: white; width: 650px; max-width: 100%; max-height: 90vh; overflow-y: auto; border-radius: 25px; position: relative; padding: 30px; }
         .close-btn { position: absolute; top: 15px; right: 15px; border: none; background: #eee; width: 35px; height: 35px; border-radius: 50%; font-size: 20px; }
 
-        /* QUICK VIEW MODAL */
-        .quickview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-        .quickview-img { width: 100%; height: 280px; object-fit: cover; border-radius: 18px; }
-        .quickview-info h2 { font-family: Georgia, serif; font-size: 24px; margin-bottom: 5px; }
-        .quickview-info p { font-size: 13px; color: #666; margin-bottom: 12px; }
-        .quickview-box { background: #fdf8f6; padding: 12px; border-radius: 12px; margin-bottom: 15px; font-size: 12px; }
-        .quickview-box strong { display: block; color: #743b40; margin-bottom: 3px; }
-
         /* CART DRAWER */
         .cart { position: fixed; top: 0; right: -430px; width: 430px; max-width: 100%; height: 100vh; background: white; z-index: 1001; transition: .3s; display: flex; flex-direction: column; box-shadow: -20px 0 50px rgba(0,0,0,.15); }
         .cart.open { right: 0; }
@@ -136,28 +128,17 @@
         .stat-box h4 { font-size: 11px; color: #efd0cb; text-transform: uppercase; margin-bottom: 5px; }
         .stat-box p { font-size: 18px; font-weight: bold; }
 
-        .admin-table-wrapper { overflow-x: auto; margin-top: 10px; }
-        .admin-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        .admin-table th, .admin-table td { padding: 8px 10px; border-bottom: 1px solid #eee; text-align: left; }
-        .admin-table th { background: #f3e9e6; font-weight: bold; color: #191513; }
-
         .action-btn-sm { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; border: none; cursor: pointer; }
-        .btn-edit { background: #f39c12; color: white; }
-        .btn-delete { background: #e74c3c; color: white; }
-        .btn-status { background: #27ae60; color: white; }
 
-        /* RESPONSIVE */
         @media(max-width: 850px) {
             nav { display: none; }
-            .hero, .quickview-grid, .admin-grid { grid-template-columns: 1fr; }
+            .hero, .admin-grid { grid-template-columns: 1fr; }
             .stat-grid { grid-template-columns: 1fr; }
-            .quickview-img { height: 200px; }
         }
     </style>
 </head>
 <body>
 
-<!-- ANNOUNCEMENT BANNER -->
 <div class="announcement-bar" id="announcementBar">
     ✨ Free Delivery across Nairobi for orders over KSh 5,000! Use code MAGNET10 for 10% OFF!
 </div>
@@ -178,14 +159,14 @@
         <a href="https://wa.me/254743046135?text=Hello%20Magnet%20Store%20Kenya!" target="_blank" style="color: #25D366;">WhatsApp</a>
         <a href="https://instagram.com/magnetstorekenya" target="_blank" style="color: #E1306C;">Instagram</a>
         <a href="https://facebook.com/magnetstorekenya" target="_blank" style="color: #1877F2;">Facebook</a>
-        <a href="#admin" onclick="openAdmin(event)">Admin</a>
+        <a href="#admin" id="adminNavLink">Admin</a>
     </nav>
 
     <div class="header-actions">
-        <button class="action-btn" onclick="openWishlistModal()">
+        <button class="action-btn" id="wishlistBtn">
             ♡ <span class="badge" id="wishlistCount">0</span>
         </button>
-        <button class="action-btn" onclick="openCart()">
+        <button class="action-btn" id="cartBtn">
             Bag <span class="badge" id="cartCount">0</span>
         </button>
     </div>
@@ -200,24 +181,21 @@
     </div>
     <div class="hero-image">
         <img src="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=800&q=80" class="hero-slide active" alt="Slide 1">
-        <img src="https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80" class="hero-slide" alt="Slide 2">
     </div>
 </section>
 
-<!-- SHOPPING SECTION -->
 <section class="section" id="shop">
     <div class="section-title" style="margin-bottom: 20px;">
         <p class="eyebrow">EXPLORE STORE</p>
         <h2>Featured Products</h2>
     </div>
 
-    <!-- Controls Bar -->
     <div class="controls-bar">
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search product name, notes, or category..." oninput="handleFilterChange()">
+            <input type="text" id="searchInput" placeholder="Search product name, notes, or category...">
         </div>
         <div class="sort-box">
-            <select id="sortSelect" onchange="handleFilterChange()">
+            <select id="sortSelect">
                 <option value="featured">Featured</option>
                 <option value="price-low">Price: Low to High</option>
                 <option value="price-high">Price: High to Low</option>
@@ -226,20 +204,17 @@
         </div>
     </div>
 
-    <!-- Category Filters -->
-    <div class="filters">
-        <button class="filter active" onclick="filterCategory('All', this)">All</button>
-        <button class="filter" onclick="filterCategory('Perfumes', this)">Perfumes</button>
-        <button class="filter" onclick="filterCategory('Body Care', this)">Body Care</button>
-        <button class="filter" onclick="filterCategory('Skincare', this)">Skincare</button>
-        <button class="filter" onclick="filterCategory('Beauty', this)">Beauty</button>
+    <div class="filters" id="categoryFilters">
+        <button class="filter active" data-category="All">All</button>
+        <button class="filter" data-category="Perfumes">Perfumes</button>
+        <button class="filter" data-category="Body Care">Body Care</button>
+        <button class="filter" data-category="Skincare">Skincare</button>
+        <button class="filter" data-category="Beauty">Beauty</button>
     </div>
 
-    <!-- Product Grid -->
     <div class="product-grid" id="productGrid"></div>
 </section>
 
-<!-- FLOATING SOCIAL WIDGET (LEFT CORNER) -->
 <div class="floating-socials">
     <a href="https://wa.me/254743046135?text=Hello%20Magnet%20Store%20Kenya!" target="_blank" class="social-pill pill-wa">
         💬 WhatsApp
@@ -252,76 +227,45 @@
     </a>
 </div>
 
-<!-- QUICK VIEW MODAL -->
-<div class="modal" id="quickViewModal">
-    <div class="modal-content">
-        <button class="close-btn" onclick="closeQuickView()">×</button>
-        <div class="quickview-grid" id="quickViewContent"></div>
-    </div>
-</div>
+<div class="overlay" id="overlay"></div>
 
-<!-- WISHLIST MODAL -->
-<div class="modal" id="wishlistModal">
-    <div class="modal-content" style="width: 450px;">
-        <button class="close-btn" onclick="closeWishlistModal()">×</button>
-        <h2>Saved Wishlist</h2>
-        <div id="wishlistItems" style="margin-top: 15px;"></div>
-    </div>
-</div>
-
-<!-- CART DRAWER -->
-<div class="overlay" id="overlay" onclick="closeCart()"></div>
 <div class="cart" id="cart">
     <div class="cart-header">
         <h2>Your Bag</h2>
-        <button class="close-btn" onclick="closeCart()">×</button>
+        <button class="close-btn" id="closeCartBtn">×</button>
     </div>
     <div class="cart-items" id="cartItems"></div>
     <div class="cart-footer">
         <div class="promo-box">
             <input type="text" id="promoInput" placeholder="Promo Code (e.g. MAGNET10)">
-            <button onclick="applyPromo()">Apply</button>
+            <button id="applyPromoBtn">Apply</button>
         </div>
         <div class="discount-row" id="discountRow" style="display:none;">
             <span>Discount Applied:</span>
             <strong id="discountAmount">-KSh 0</strong>
         </div>
         <div class="cart-total"><span>Total</span><strong id="cartTotal">KSh 0</strong></div>
-        <button class="btn-full" style="background:#25D366; color:white;" onclick="orderWhatsApp()">Order via WhatsApp</button>
+        <button class="btn-full" style="background:#25D366; color:white;" id="orderWhatsAppBtn">Order via WhatsApp</button>
     </div>
 </div>
 
-<!-- ADMIN DASHBOARD -->
 <section class="section" id="admin" style="display:none; background:#f4e9e6;">
     <div class="admin-dashboard">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:2px solid #efe4df; padding-bottom:12px;">
             <h2>Admin Control Center</h2>
             <div>
-                <button onclick="changeAdminPassword()" class="action-btn-sm" style="background:#ad666b; color:white; padding:6px 12px; margin-right:5px;">🔑 Change Password</button>
-                <button onclick="exportData()" class="action-btn-sm" style="background:#191513; color:white; padding:6px 12px; margin-right:5px;">📥 Backup JSON</button>
-                <button onclick="importDataPrompt()" class="action-btn-sm" style="background:#743b40; color:white; padding:6px 12px; margin-right:5px;">📤 Import JSON</button>
-                <button onclick="resetDefaults()" class="action-btn-sm" style="background:#e74c3c; color:white; padding:6px 12px;">↺ Reset All</button>
+                <button id="changeAdminPwdBtn" class="action-btn-sm" style="background:#ad666b; color:white; padding:6px 12px; margin-right:5px;">🔑 Change Password</button>
             </div>
         </div>
 
-        <!-- STATS OVERVIEW -->
         <div class="stat-grid">
             <div class="stat-box">
-                <h4>Total Sales Revenue</h4>
-                <p id="statRevenue">KSh 0</p>
-            </div>
-            <div class="stat-box">
-                <h4>Total Orders Logged</h4>
-                <p id="statOrders">0</p>
-            </div>
-            <div class="stat-box">
-                <h4>Products in Store</h4>
+                <h4>Products Live in Database</h4>
                 <p id="statProducts">0</p>
             </div>
         </div>
 
         <div class="admin-grid">
-            <!-- PRODUCT FORM (ADD / EDIT) -->
             <div class="admin-card">
                 <h3 id="formHeading">Product Editor</h3>
                 <form id="addProductForm">
@@ -364,637 +308,376 @@
 
                     <div style="display: flex; gap: 8px;">
                         <button type="submit" id="saveProductBtn" class="btn btn-dark" style="flex: 1;">Save Product</button>
-                        <button type="button" id="cancelEditBtn" onclick="resetForm()" class="btn" style="background:#ccc; display:none; padding:12px;">Cancel</button>
+                        <button type="button" id="cancelEditBtn" class="btn" style="background:#ccc; display:none; padding:12px;">Cancel</button>
                     </div>
                 </form>
-            </div>
-
-            <!-- PROMO & STORE ANNOUNCEMENT SETTINGS -->
-            <div>
-                <div class="admin-card" style="margin-bottom: 20px;">
-                    <h3>Store Announcement Banner</h3>
-                    <label>Banner Text</label>
-                    <input type="text" id="adminBannerText" placeholder="Enter top bar message...">
-                    <button onclick="updateBannerText()" class="btn btn-dark" style="width:100%; padding:8px; font-size:12px;">Update Banner</button>
-                </div>
-
-                <div class="admin-card">
-                    <h3>Create Promo Discount Code</h3>
-                    <label>Code Name</label>
-                    <input type="text" id="promoCodeInput" placeholder="e.g. SALE20">
-                    <label>Discount Percentage (%)</label>
-                    <input type="number" id="promoPercentInput" placeholder="e.g. 20">
-                    <button onclick="addPromoCode()" class="btn btn-dark" style="width:100%; padding:8px; font-size:12px;">Add Promo Code</button>
-                    
-                    <div style="margin-top:12px;">
-                        <label>Active Codes:</label>
-                        <ul id="activePromoList" style="font-size:12px; padding-left:18px; margin-top:4px;"></ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ORDERS LOG TABLE -->
-        <div class="admin-card" style="margin-top:25px;">
-            <h3>Received WhatsApp Orders Log</h3>
-            <div class="admin-table-wrapper">
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Date</th>
-                            <th>Items</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ordersTableBody"></tbody>
-                </table>
             </div>
         </div>
     </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
     <h3>MAGNET STORE KENYA</h3>
     <p style="font-size: 12px; color: #aaa; margin-top: 5px;">Your ultimate destination for perfumes and skincare.</p>
-    
     <div class="footer-socials">
         <a href="https://wa.me/254743046135" target="_blank">WhatsApp</a>
         <a href="https://instagram.com/magnetstorekenya" target="_blank">Instagram</a>
         <a href="https://facebook.com/magnetstorekenya" target="_blank">Facebook</a>
     </div>
-
     <p style="font-size: 11px; color: #666;">© 2026 Magnet Store Kenya. All rights reserved.</p>
 </footer>
 
-<script>
-    const initialProducts = [
-        { id: 1, name: "Signature Rose EDP", category: "Perfumes", price: 3500, stock: 8, rating: 4.8, reviews: 24, image: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=500&q=80", notes: "Top: Bulgarian Rose | Base: Amber & Vanilla", description: "An intoxicating floral perfume designed for modern elegance." },
-        { id: 2, name: "Vanilla Glow Spray", category: "Perfumes", price: 2800, stock: 3, rating: 4.6, reviews: 18, image: "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=500&q=80", notes: "Top: Warm Vanilla | Base: Sweet Musk", description: "A comforting scent with long-lasting warm sweetness." },
-        { id: 3, name: "Midnight Oud", category: "Perfumes", price: 4200, stock: 12, rating: 4.9, reviews: 31, image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=500&q=80", notes: "Top: Smoky Oud | Base: Leather & Spice", description: "Bold and deep fragrance ideal for evening occasions." },
-        { id: 4, name: "Bloom Body Mist", category: "Body Care", price: 1800, stock: 0, rating: 4.4, reviews: 12, image: "https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?auto=format&fit=crop&w=500&q=80", notes: "Key Ingredient: Jasmine & Lotus Water", description: "Light refreshing mist for all-day hydration and scent." },
-        { id: 5, name: "Shea Nourish Lotion", category: "Body Care", price: 1500, stock: 15, rating: 4.7, reviews: 29, image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=500&q=80", notes: "Key Ingredient: Raw Shea Butter & Vitamin E", description: "Deeply moisturizing lotion for soft, supple skin." },
-        { id: 6, name: "Daily Hydration Serum", category: "Skincare", price: 2200, stock: 6, rating: 4.8, reviews: 40, image: "https://images.unsplash.com/photo-1608248597261-83325705434d?auto=format&fit=crop&w=500&q=80", notes: "Key Ingredient: Hyaluronic Acid & Niacinamide", description: "Restores glow and plumps skin texture instantly." }
-    ];
-
-    let products = JSON.parse(localStorage.getItem('magnet_products')) || initialProducts;
-    let cart = [];
-    let wishlist = JSON.parse(localStorage.getItem('magnet_wishlist')) || [];
-    let orders = JSON.parse(localStorage.getItem('magnet_orders')) || [];
-    let promoCodes = JSON.parse(localStorage.getItem('magnet_promos')) || { "MAGNET10": 10 };
-    let activePromoDiscount = 0;
-    let currentCategory = "All";
-
-    // ADMIN PASSWORD MANAGEMENT
-    function getAdminPassword() {
-        return localStorage.getItem('magnet_admin_password') || "admin123";
-    }
-
-    function verifyAdminPassword(actionName) {
-        const input = prompt(`Enter Admin Password to ${actionName}:`);
-        if (input === getAdminPassword()) {
-            return true;
-        }
-        alert("Incorrect password. Action denied.");
-        return false;
-    }
-
-    function changeAdminPassword() {
-        if (verifyAdminPassword("change password")) {
-            const newPassword = prompt("Enter new Admin Password:");
-            if (newPassword && newPassword.trim() !== "") {
-                localStorage.setItem('magnet_admin_password', newPassword.trim());
-                alert("Admin password updated successfully!");
-            } else {
-                alert("Password cannot be empty.");
-            }
-        }
-    }
-
-    // DISPLAY PRODUCTS
-    function renderProducts() {
-        const grid = document.getElementById("productGrid");
-        const searchQuery = document.getElementById("searchInput").value.toLowerCase();
-        const sortBy = document.getElementById("sortSelect").value;
-
-        let filtered = products.filter(p => {
-            const matchesCategory = (currentCategory === "All" || p.category === currentCategory);
-            const matchesSearch = p.name.toLowerCase().includes(searchQuery) || 
-                                  p.category.toLowerCase().includes(searchQuery) ||
-                                  (p.notes && p.notes.toLowerCase().includes(searchQuery));
-            return matchesCategory && matchesSearch;
-        });
-
-        if (sortBy === "price-low") filtered.sort((a,b) => a.price - b.price);
-        if (sortBy === "price-high") filtered.sort((a,b) => b.price - a.price);
-        if (sortBy === "rating") filtered.sort((a,b) => b.rating - a.rating);
-
-        grid.innerHTML = "";
-        if(filtered.length === 0) {
-            grid.innerHTML = `<p style="grid-column: 1/-1; color:#888;">No products match your search.</p>`;
-            return;
-        }
-
-        filtered.forEach(p => {
-            const isWishlisted = wishlist.includes(p.id);
-            const isOutOfStock = (p.stock <= 0);
-            const isLowStock = (p.stock > 0 && p.stock <= 3);
-
-            grid.innerHTML += `
-                <div class="product">
-                    <button class="wishlist-btn ${isWishlisted ? 'active' : ''}" onclick="toggleWishlist(${p.id})">♥</button>
-                    ${isOutOfStock ? `<span class="stock-badge out">Sold Out</span>` : (isLowStock ? `<span class="stock-badge">Low Stock (${p.stock})</span>` : '')}
-                    
-                    <div class="product-image" onclick="openQuickView(${p.id})">
-                        <img src="${p.image}" alt="${p.name}">
-                    </div>
-                    <div class="product-details">
-                        <div class="product-category">${p.category}</div>
-                        <h3 onclick="openQuickView(${p.id})">${p.name}</h3>
-                        <div class="rating">★ ${p.rating} <span>(${p.reviews || 10})</span></div>
-                        <div class="product-bottom">
-                            <span class="price">KSh ${p.price.toLocaleString()}</span>
-                            <button class="add-button" ${isOutOfStock ? 'disabled' : ''} onclick="addToCart(${p.id})">
-                                ${isOutOfStock ? 'Out of Stock' : 'Add to Bag'}
-                            </button>
-                        </div>
-
-                        <!-- Admin Actions -->
-                        <div style="display:flex; gap:5px; margin-top:10px; border-top:1px solid #eee; padding-top:8px;">
-                            <button onclick="editProduct(${p.id})" style="flex:1; padding:4px; font-size:11px; border:1px solid #743b40; color:#743b40; background:none; border-radius:12px;">✏ Edit</button>
-                            <button onclick="deleteProduct(${p.id})" style="flex:1; padding:4px; font-size:11px; border:1px solid #e74c3c; color:#e74c3c; background:none; border-radius:12px;">🗑 Delete</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-        renderAdminStats();
-    }
-
-    function filterCategory(cat, btn) {
-        currentCategory = cat;
-        document.querySelectorAll('.filter').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        renderProducts();
-    }
-
-    function handleFilterChange() {
-        renderProducts();
-    }
-
-    // WISHLIST
-    function toggleWishlist(id) {
-        if(wishlist.includes(id)) {
-            wishlist = wishlist.filter(item => item !== id);
-        } else {
-            wishlist.push(id);
-        }
-        localStorage.setItem('magnet_wishlist', JSON.stringify(wishlist));
-        updateWishlistCount();
-        renderProducts();
-    }
-
-    function updateWishlistCount() {
-        document.getElementById('wishlistCount').textContent = wishlist.length;
-    }
-
-    function openWishlistModal() {
-        const container = document.getElementById("wishlistItems");
-        container.innerHTML = "";
-        const savedProducts = products.filter(p => wishlist.includes(p.id));
-
-        if(savedProducts.length === 0) {
-            container.innerHTML = `<p style="font-size:13px; color:#777;">Your wishlist is currently empty.</p>`;
-        } else {
-            savedProducts.forEach(p => {
-                container.innerHTML += `
-                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; border-bottom:1px solid #eee; padding-bottom:8px;">
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <img src="${p.image}" style="width:40px; height:40px; border-radius:8px; object-fit:cover;">
-                            <div>
-                                <strong style="font-size:12px; display:block;">${p.name}</strong>
-                                <span style="font-size:11px; color:#888;">KSh ${p.price.toLocaleString()}</span>
-                            </div>
-                        </div>
-                        <button class="add-button" onclick="addToCart(${p.id})">Add to Bag</button>
-                    </div>
-                `;
-            });
-        }
-        document.getElementById("wishlistModal").classList.add("show");
-    }
-
-    function closeWishlistModal() {
-        document.getElementById("wishlistModal").classList.remove("show");
-    }
-
-    // QUICK VIEW
-    function openQuickView(id) {
-        const p = products.find(item => item.id === id);
-        if(!p) return;
-
-        const content = document.getElementById("quickViewContent");
-        content.innerHTML = `
-            <img src="${p.image}" class="quickview-img" alt="${p.name}">
-            <div class="quickview-info">
-                <span class="product-category">${p.category}</span>
-                <h2>${p.name}</h2>
-                <div class="rating" style="margin-bottom:10px;">★ ${p.rating} <span>(${p.reviews || 10} verified reviews)</span></div>
-                <h3 style="margin-bottom:10px;">KSh ${p.price.toLocaleString()}</h3>
-                <p style="font-size:12px; margin-bottom:8px; color:${p.stock > 0 ? '#27ae60' : '#e74c3c'}; font-weight:bold;">
-                    ${p.stock > 0 ? `In Stock (${p.stock} remaining)` : 'Out of Stock'}
-                </p>
-                <p>${p.description}</p>
-                <div class="quickview-box">
-                    <strong>Notes / Key Ingredients:</strong>
-                    ${p.notes || "High-grade pure blend."}
-                </div>
-                <button class="btn btn-dark" style="width:100%;" ${p.stock <= 0 ? 'disabled' : ''} onclick="addToCart(${p.id}); closeQuickView();">
-                    ${p.stock <= 0 ? 'Out of Stock' : 'Add to Bag'}
-                </button>
-            </div>
-        `;
-        document.getElementById("quickViewModal").classList.add("show");
-    }
-
-    function closeQuickView() {
-        document.getElementById("quickViewModal").classList.remove("show");
-    }
-
-    // CART & CHECKOUT
-    function addToCart(id) {
-        const product = products.find(p => p.id === id);
-        if(!product || product.stock <= 0) return alert("Sorry, this product is out of stock.");
-
-        const existing = cart.find(p => p.id === id);
-        if (existing) {
-            if(existing.quantity + 1 > product.stock) {
-                return alert(`Only ${product.stock} units available in stock.`);
-            }
-            existing.quantity++;
-        } else {
-            cart.push({ ...product, quantity: 1 });
-        }
-        updateCart();
-        openCart();
-    }
-
-    function updateCart() {
-        const items = document.getElementById("cartItems");
-        items.innerHTML = "";
-        let subtotal = 0, count = 0;
-
-        cart.forEach(item => {
-            subtotal += item.price * item.quantity;
-            count += item.quantity;
-            items.innerHTML += `
-                <div class="cart-item">
-                    <div class="cart-thumb"><img src="${item.image}"></div>
-                    <div>
-                        <h4>${item.name}</h4>
-                        <p>KSh ${item.price.toLocaleString()}</p>
-                        <div class="quantity">
-                            <button onclick="changeQty(${item.id}, -1)">-</button>
-                            <span>${item.quantity}</span>
-                            <button onclick="changeQty(${item.id}, 1)">+</button>
-                        </div>
-                    </div>
-                    <strong>KSh ${(item.price * item.quantity).toLocaleString()}</strong>
-                </div>
-            `;
-        });
-
-        let discountVal = (subtotal * activePromoDiscount) / 100;
-        let finalTotal = subtotal - discountVal;
-
-        if (activePromoDiscount > 0) {
-            document.getElementById("discountRow").style.display = "flex";
-            document.getElementById("discountAmount").textContent = "-KSh " + discountVal.toLocaleString();
-        } else {
-            document.getElementById("discountRow").style.display = "none";
-        }
-
-        document.getElementById("cartCount").textContent = count;
-        document.getElementById("cartTotal").textContent = "KSh " + finalTotal.toLocaleString();
-    }
-
-    function changeQty(id, amt) {
-        const item = cart.find(p => p.id === id);
-        const product = products.find(p => p.id === id);
-        if(item) {
-            if(amt > 0 && item.quantity + 1 > product.stock) {
-                return alert(`Only ${product.stock} units available in stock.`);
-            }
-            item.quantity += amt;
-            if(item.quantity <= 0) cart = cart.filter(p => p.id !== id);
-            updateCart();
-        }
-    }
-
-    function applyPromo() {
-        const code = document.getElementById("promoInput").value.trim().toUpperCase();
-        if(promoCodes[code]) {
-            activePromoDiscount = promoCodes[code];
-            alert(`Promo code applied! ${activePromoDiscount}% discount added.`);
-            updateCart();
-        } else {
-            alert("Invalid promo code.");
-        }
-    }
-
-    function openCart() {
-        document.getElementById("cart").classList.add("open");
-        document.getElementById("overlay").classList.add("show");
-    }
-
-    function closeCart() {
-        document.getElementById("cart").classList.remove("open");
-        document.getElementById("overlay").classList.remove("show");
-    }
-
-    function orderWhatsApp() {
-        if (cart.length === 0) return alert("Bag is empty.");
-        let msg = "Hello Magnet Store Kenya!%0A%0AI want to order:%0A";
-        let subtotal = 0;
-        
-        cart.forEach(i => {
-            msg += `- ${i.name} x${i.quantity} = KSh ${(i.price * i.quantity).toLocaleString()}%0A`;
-            subtotal += i.price * i.quantity;
-            
-            // Deduct local stock inventory
-            const targetProd = products.find(p => p.id === i.id);
-            if(targetProd) targetProd.stock = Math.max(0, targetProd.stock - i.quantity);
-        });
-
-        let discountVal = (subtotal * activePromoDiscount) / 100;
-        let grandTotal = subtotal - discountVal;
-
-        if(activePromoDiscount > 0) {
-            msg += `%0ADiscount: -KSh ${discountVal.toLocaleString()}`;
-        }
-        msg += `%0ATotal Amount: KSh ${grandTotal.toLocaleString()}`;
-
-        // Save order into Admin Order History
-        const newOrder = {
-            id: 'ORD-' + Math.floor(1000 + Math.random() * 9000),
-            date: new Date().toLocaleDateString(),
-            items: cart.map(c => `${c.name} (${c.quantity})`).join(', '),
-            total: grandTotal,
-            status: 'Delivered'
-        };
-        orders.unshift(newOrder);
-        localStorage.setItem('magnet_orders', JSON.stringify(orders));
-        localStorage.setItem('magnet_products', JSON.stringify(products));
-
-        cart = [];
-        activePromoDiscount = 0;
-        updateCart();
-        renderProducts();
-        renderOrdersTable();
-
-        window.open(`https://wa.me/254743046135?text=${msg}`, "_blank");
-    }
-
-    // ADMIN MANAGEMENT
-    function openAdmin(e) {
-        e.preventDefault();
-        if(verifyAdminPassword("access Admin Panel")) {
-            const sec = document.getElementById("admin");
-            sec.style.display = "block";
-            renderAdminStats();
-            renderOrdersTable();
-            renderPromoList();
-            sec.scrollIntoView({ behavior: "smooth" });
-        }
-    }
-
-    function renderAdminStats() {
-        const totalRev = orders.reduce((sum, o) => sum + (o.status !== 'Cancelled' ? o.total : 0), 0);
-        document.getElementById("statRevenue").textContent = "KSh " + totalRev.toLocaleString();
-        document.getElementById("statOrders").textContent = orders.length;
-        document.getElementById("statProducts").textContent = products.length;
-    }
-
-    function renderOrdersTable() {
-        const tbody = document.getElementById("ordersTableBody");
-        tbody.innerHTML = "";
-        if(orders.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#888;">No orders recorded yet.</td></tr>`;
-            return;
-        }
-
-        orders.forEach((o, index) => {
-            tbody.innerHTML += `
-                <tr>
-                    <td><strong>${o.id}</strong></td>
-                    <td>${o.date}</td>
-                    <td>${o.items}</td>
-                    <td>KSh ${o.total.toLocaleString()}</td>
-                    <td><span style="color:${o.status === 'Cancelled' ? '#e74c3c' : '#27ae60'}; font-weight:bold;">${o.status}</span></td>
-                    <td>
-                        <button class="action-btn-sm btn-status" onclick="toggleOrderStatus(${index})">Toggle Status</button>
-                    </td>
-                </tr>
-            `;
-        });
-    }
-
-    function toggleOrderStatus(idx) {
-        orders[idx].status = orders[idx].status === 'Delivered' ? 'Cancelled' : 'Delivered';
-        localStorage.setItem('magnet_orders', JSON.stringify(orders));
-        renderOrdersTable();
-        renderAdminStats();
-    }
-
-    function editProduct(id) {
-        if (!verifyAdminPassword("edit this product")) return;
-
-        const p = products.find(item => item.id === id);
-        if(!p) return;
-
-        document.getElementById("prodId").value = p.id;
-        document.getElementById("prodName").value = p.name;
-        document.getElementById("prodCategory").value = p.category;
-        document.getElementById("prodPrice").value = p.price;
-        document.getElementById("prodStock").value = p.stock;
-        document.getElementById("prodRating").value = p.rating;
-        document.getElementById("prodNotes").value = p.notes || "";
-        document.getElementById("prodDesc").value = p.description || "";
-
-        document.getElementById("formHeading").textContent = "Edit Product #" + p.id;
-        document.getElementById("saveProductBtn").textContent = "Update Product";
-        document.getElementById("cancelEditBtn").style.display = "inline-block";
-
-        document.getElementById("admin").style.display = "block";
-        document.getElementById("admin").scrollIntoView({ behavior: "smooth" });
-    }
-
-    function deleteProduct(id) {
-        if (!verifyAdminPassword("delete this product")) return;
-
-        if (confirm("Are you sure you want to delete this product?")) {
-            products = products.filter(p => p.id !== id);
-            localStorage.setItem('magnet_products', JSON.stringify(products));
-            renderProducts();
-        }
-    }
-
-    function resetForm() {
-        document.getElementById("addProductForm").reset();
-        document.getElementById("prodId").value = "";
-        document.getElementById("formHeading").textContent = "Product Editor";
-        document.getElementById("saveProductBtn").textContent = "Save Product";
-        document.getElementById("cancelEditBtn").style.display = "none";
-    }
-
-    // BASE64 IMAGE CONVERTER
-    function getBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-        });
-    }
-
-    // FORM SUBMIT HANDLER
-    document.getElementById("addProductForm").addEventListener("submit", async function(e) {
-        e.preventDefault();
-        
-        const editId = document.getElementById("prodId").value;
-        const fileInput = document.getElementById("prodImageFile");
-        
-        let existingProduct = editId ? products.find(p => p.id == editId) : null;
-        let imageDataUrl = existingProduct ? existingProduct.image : "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=500&q=80";
-
-        if (fileInput.files && fileInput.files[0]) {
-            try {
-                imageDataUrl = await getBase64(fileInput.files[0]);
-            } catch (err) {
-                alert("Failed to read image file.");
-            }
-        }
-
-        if (editId) {
-            const idx = products.findIndex(p => p.id == editId);
-            if(idx !== -1) {
-                products[idx] = {
-                    ...products[idx],
-                    name: document.getElementById("prodName").value,
-                    category: document.getElementById("prodCategory").value,
-                    price: parseFloat(document.getElementById("prodPrice").value),
-                    stock: parseInt(document.getElementById("prodStock").value) || 0,
-                    rating: parseFloat(document.getElementById("prodRating").value) || 5.0,
-                    image: imageDataUrl,
-                    notes: document.getElementById("prodNotes").value,
-                    description: document.getElementById("prodDesc").value
-                };
-                alert("Product updated successfully!");
-            }
-        } else {
-            const newP = {
-                id: Date.now(),
-                name: document.getElementById("prodName").value,
-                category: document.getElementById("prodCategory").value,
-                price: parseFloat(document.getElementById("prodPrice").value),
-                stock: parseInt(document.getElementById("prodStock").value) || 0,
-                rating: parseFloat(document.getElementById("prodRating").value) || 5.0,
-                reviews: 1,
-                image: imageDataUrl,
-                notes: document.getElementById("prodNotes").value,
-                description: document.getElementById("prodDesc").value
-            };
-            products.push(newP);
-            alert("New product added!");
-        }
-
-        localStorage.setItem('magnet_products', JSON.stringify(products));
-        renderProducts();
-        resetForm();
-    });
-
-    // PROMOS & ANNOUNCEMENT BANNER
-    function updateBannerText() {
-        const txt = document.getElementById("adminBannerText").value;
-        if(txt) {
-            document.getElementById("announcementBar").textContent = txt;
-            localStorage.setItem('magnet_banner', txt);
-            alert("Banner updated!");
-        }
-    }
-
-    function addPromoCode() {
-        const code = document.getElementById("promoCodeInput").value.trim().toUpperCase();
-        const percent = parseInt(document.getElementById("promoPercentInput").value);
-        if(code && percent) {
-            promoCodes[code] = percent;
-            localStorage.setItem('magnet_promos', JSON.stringify(promoCodes));
-            renderPromoList();
-            document.getElementById("promoCodeInput").value = "";
-            document.getElementById("promoPercentInput").value = "";
-            alert(`Promo code ${code} (${percent}%) created!`);
-        }
-    }
-
-    function renderPromoList() {
-        const list = document.getElementById("activePromoList");
-        list.innerHTML = "";
-        for(let key in promoCodes) {
-            list.innerHTML += `<li><strong>${key}</strong>: ${promoCodes[key]}% OFF</li>`;
-        }
-    }
-
-    // BACKUP & RESTORE DATA
-    function exportData() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ products, orders, promoCodes }));
-        const dlAnchor = document.createElement('a');
-        dlAnchor.setAttribute("href", dataStr);
-        dlAnchor.setAttribute("download", "magnet_store_backup.json");
-        document.body.appendChild(dlAnchor);
-        dlAnchor.click();
-        dlAnchor.remove();
-    }
-
-    function importDataPrompt() {
-        const jsonStr = prompt("Paste your store JSON backup string here:");
-        if (jsonStr) {
-            try {
-                const data = JSON.parse(jsonStr);
-                if (data.products) { products = data.products; localStorage.setItem('magnet_products', JSON.stringify(products)); }
-                if (data.orders) { orders = data.orders; localStorage.setItem('magnet_orders', JSON.stringify(orders)); }
-                if (data.promoCodes) { promoCodes = data.promoCodes; localStorage.setItem('magnet_promos', JSON.stringify(promoCodes)); }
-                renderProducts();
-                renderOrdersTable();
-                renderPromoList();
-                alert("Data imported successfully!");
-            } catch (e) {
-                alert("Invalid JSON data format.");
-            }
-        }
-    }
-
-    function resetDefaults() {
-        if(confirm("Are you sure you want to reset all products and store stats back to factory defaults?")) {
-            localStorage.clear();
-            products = initialProducts;
-            orders = [];
-            promoCodes = { "MAGNET10": 10 };
-            renderProducts();
-            renderOrdersTable();
-            renderPromoList();
-            alert("Store reset to default parameters.");
-        }
-    }
-
-    // INIT STORE BANNER FROM STORAGE
-    const savedBanner = localStorage.getItem('magnet_banner');
-    if(savedBanner) document.getElementById("announcementBar").textContent = savedBanner;
-
-    renderProducts();
-    updateWishlistCount();
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-analytics.js";
+  import { getDatabase, ref, onValue, push, update, remove } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAPfYjbeIuc3_tphgik2gnuWvSv-kt3Tos",
+    authDomain: "magnet-store-kenya.firebaseapp.com",
+    projectId: "magnet-store-kenya",
+    storageBucket: "magnet-store-kenya.firebasestorage.app",
+    messagingSenderId: "45589904684",
+    appId: "1:45589904684:web:b61c02d94adb423fd90089",
+    measurementId: "G-3NQBQ09TL3"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getDatabase(app);
+
+  let products = [];
+  let cart = [];
+  let wishlist = JSON.parse(localStorage.getItem('magnet_wishlist')) || [];
+  let activePromoDiscount = 0;
+  let currentCategory = "All";
+
+  const dbRef = ref(db, 'products');
+  onValue(dbRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+          products = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+      } else {
+          products = [];
+      }
+      renderProducts();
+  });
+
+  function getAdminPassword() {
+      return localStorage.getItem('magnet_admin_password') || "admin123";
+  }
+
+  function verifyAdminPassword(actionName) {
+      const input = prompt(`Enter Admin Password to ${actionName}:`);
+      if (input === getAdminPassword()) return true;
+      alert("Incorrect password. Action denied.");
+      return false;
+  }
+
+  function changeAdminPassword() {
+      if (verifyAdminPassword("change password")) {
+          const newPassword = prompt("Enter new Admin Password:");
+          if (newPassword && newPassword.trim() !== "") {
+              localStorage.setItem('magnet_admin_password', newPassword.trim());
+              alert("Admin password updated successfully!");
+          }
+      }
+  }
+
+  function renderProducts() {
+      const grid = document.getElementById("productGrid");
+      const searchQuery = document.getElementById("searchInput").value.toLowerCase();
+      const sortBy = document.getElementById("sortSelect").value;
+
+      let filtered = products.filter(p => {
+          const matchesCategory = (currentCategory === "All" || p.category === currentCategory);
+          const matchesSearch = (p.name && p.name.toLowerCase().includes(searchQuery)) || 
+                                (p.category && p.category.toLowerCase().includes(searchQuery)) ||
+                                (p.notes && p.notes.toLowerCase().includes(searchQuery));
+          return matchesCategory && matchesSearch;
+      });
+
+      if (sortBy === "price-low") filtered.sort((a,b) => a.price - b.price);
+      if (sortBy === "price-high") filtered.sort((a,b) => b.price - a.price);
+      if (sortBy === "rating") filtered.sort((a,b) => b.rating - a.rating);
+
+      grid.innerHTML = "";
+      if (filtered.length === 0) {
+          grid.innerHTML = `<p style="grid-column: 1/-1; color:#888;">No products found.</p>`;
+          return;
+      }
+
+      filtered.forEach(p => {
+          const isWishlisted = wishlist.includes(p.id);
+          const isOutOfStock = (p.stock <= 0);
+          const isLowStock = (p.stock > 0 && p.stock <= 3);
+
+          const card = document.createElement("div");
+          card.className = "product";
+          card.innerHTML = `
+              <button class="wishlist-btn ${isWishlisted ? 'active' : ''}">♥</button>
+              ${isOutOfStock ? `<span class="stock-badge out">Sold Out</span>` : (isLowStock ? `<span class="stock-badge">Low Stock (${p.stock})</span>` : '')}
+              
+              <div class="product-image">
+                  <img src="${p.image}" alt="${p.name}">
+              </div>
+              <div class="product-details">
+                  <div class="product-category">${p.category}</div>
+                  <h3>${p.name}</h3>
+                  <div class="rating">★ ${p.rating || 5.0} <span>(${p.reviews || 10})</span></div>
+                  <div class="product-bottom">
+                      <span class="price">KSh ${(p.price || 0).toLocaleString()}</span>
+                      <button class="add-button" ${isOutOfStock ? 'disabled' : ''}>
+                          ${isOutOfStock ? 'Out of Stock' : 'Add to Bag'}
+                      </button>
+                  </div>
+
+                  <div style="display:flex; gap:5px; margin-top:10px; border-top:1px solid #eee; padding-top:8px;">
+                      <button class="edit-btn action-btn-sm" style="flex:1; border:1px solid #743b40; color:#743b40; background:none; border-radius:12px;">✏ Edit</button>
+                      <button class="delete-btn action-btn-sm" style="flex:1; border:1px solid #e74c3c; color:#e74c3c; background:none; border-radius:12px;">🗑 Delete</button>
+                  </div>
+              </div>
+          `;
+
+          card.querySelector('.wishlist-btn').addEventListener('click', () => toggleWishlist(p.id));
+          card.querySelector('.add-button').addEventListener('click', () => addToCart(p.id));
+          card.querySelector('.edit-btn').addEventListener('click', () => editProduct(p.id));
+          card.querySelector('.delete-btn').addEventListener('click', () => deleteProduct(p.id));
+
+          grid.appendChild(card);
+      });
+      document.getElementById("statProducts").textContent = products.length;
+  }
+
+  document.getElementById("addProductForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      
+      const editId = document.getElementById("prodId").value;
+      const fileInput = document.getElementById("prodImageFile");
+      
+      let existingProduct = editId ? products.find(p => p.id == editId) : null;
+      let imageDataUrl = existingProduct ? existingProduct.image : "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=500&q=80";
+
+      if (fileInput.files && fileInput.files[0]) {
+          try {
+              imageDataUrl = await getBase64(fileInput.files[0]);
+          } catch (err) {
+              alert("Failed to read image file.");
+          }
+      }
+
+      const productData = {
+          name: document.getElementById("prodName").value,
+          category: document.getElementById("prodCategory").value,
+          price: parseFloat(document.getElementById("prodPrice").value),
+          stock: parseInt(document.getElementById("prodStock").value) || 0,
+          rating: parseFloat(document.getElementById("prodRating").value) || 5.0,
+          image: imageDataUrl,
+          notes: document.getElementById("prodNotes").value,
+          description: document.getElementById("prodDesc").value
+      };
+
+      if (editId) {
+          update(ref(db, 'products/' + editId), productData).then(() => {
+              alert("Product updated!");
+              resetForm();
+          }).catch(err => alert("Error updating: " + err.message));
+      } else {
+          push(ref(db, 'products'), productData).then(() => {
+              alert("New product added!");
+              resetForm();
+          }).catch(err => alert("Error adding: " + err.message));
+      }
+  });
+
+  function deleteProduct(id) {
+      if (!verifyAdminPassword("delete this product")) return;
+      if (confirm("Are you sure you want to delete this product?")) {
+          remove(ref(db, 'products/' + id));
+      }
+  }
+
+  function editProduct(id) {
+      if (!verifyAdminPassword("edit this product")) return;
+      const p = products.find(item => item.id == id);
+      if (!p) return;
+
+      document.getElementById("prodId").value = p.id;
+      document.getElementById("prodName").value = p.name;
+      document.getElementById("prodCategory").value = p.category;
+      document.getElementById("prodPrice").value = p.price;
+      document.getElementById("prodStock").value = p.stock;
+      document.getElementById("prodRating").value = p.rating;
+      document.getElementById("prodNotes").value = p.notes || "";
+      document.getElementById("prodDesc").value = p.description || "";
+
+      document.getElementById("formHeading").textContent = "Edit Product";
+      document.getElementById("saveProductBtn").textContent = "Update Product";
+      document.getElementById("cancelEditBtn").style.display = "inline-block";
+
+      document.getElementById("admin").style.display = "block";
+      document.getElementById("admin").scrollIntoView({ behavior: "smooth" });
+  }
+
+  function getBase64(file) {
+      return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = error => reject(error);
+      });
+  }
+
+  function resetForm() {
+      document.getElementById("addProductForm").reset();
+      document.getElementById("prodId").value = "";
+      document.getElementById("formHeading").textContent = "Product Editor";
+      document.getElementById("saveProductBtn").textContent = "Save Product";
+      document.getElementById("cancelEditBtn").style.display = "none";
+  }
+
+  function toggleWishlist(id) {
+      if (wishlist.includes(id)) {
+          wishlist = wishlist.filter(item => item !== id);
+      } else {
+          wishlist.push(id);
+      }
+      localStorage.setItem('magnet_wishlist', JSON.stringify(wishlist));
+      document.getElementById('wishlistCount').textContent = wishlist.length;
+      renderProducts();
+  }
+
+  function addToCart(id) {
+      const product = products.find(p => p.id == id);
+      if (!product || product.stock <= 0) return alert("Out of stock.");
+
+      const existing = cart.find(p => p.id == id);
+      if (existing) {
+          if (existing.quantity + 1 > product.stock) return alert(`Only ${product.stock} available.`);
+          existing.quantity++;
+      } else {
+          cart.push({ ...product, quantity: 1 });
+      }
+      updateCart();
+      openCart();
+  }
+
+  function updateCart() {
+      const items = document.getElementById("cartItems");
+      items.innerHTML = "";
+      let subtotal = 0, count = 0;
+
+      cart.forEach(item => {
+          subtotal += item.price * item.quantity;
+          count += item.quantity;
+          
+          const row = document.createElement("div");
+          row.className = "cart-item";
+          row.innerHTML = `
+              <div class="cart-thumb"><img src="${item.image}"></div>
+              <div>
+                  <h4>${item.name}</h4>
+                  <p>KSh ${item.price.toLocaleString()}</p>
+                  <div class="quantity">
+                      <button class="qty-minus">-</button>
+                      <span>${item.quantity}</span>
+                      <button class="qty-plus">+</button>
+                  </div>
+              </div>
+              <strong>KSh ${(item.price * item.quantity).toLocaleString()}</strong>
+          `;
+          row.querySelector('.qty-minus').addEventListener('click', () => changeQty(item.id, -1));
+          row.querySelector('.qty-plus').addEventListener('click', () => changeQty(item.id, 1));
+          items.appendChild(row);
+      });
+
+      let discountVal = (subtotal * activePromoDiscount) / 100;
+      let finalTotal = subtotal - discountVal;
+
+      document.getElementById("cartCount").textContent = count;
+      document.getElementById("cartTotal").textContent = "KSh " + finalTotal.toLocaleString();
+  }
+
+  function changeQty(id, amt) {
+      const item = cart.find(p => p.id == id);
+      const product = products.find(p => p.id == id);
+      if (item) {
+          if (amt > 0 && item.quantity + 1 > product.stock) return alert(`Only ${product.stock} available.`);
+          item.quantity += amt;
+          if (item.quantity <= 0) cart = cart.filter(p => p.id != id);
+          updateCart();
+      }
+  }
+
+  function openCart() {
+      document.getElementById("cart").classList.add("open");
+      document.getElementById("overlay").classList.add("show");
+  }
+
+  function closeCart() {
+      document.getElementById("cart").classList.remove("open");
+      document.getElementById("overlay").classList.remove("show");
+  }
+
+  // Event Listeners setup
+  document.getElementById("cartBtn").addEventListener("click", openCart);
+  document.getElementById("closeCartBtn").addEventListener("click", closeCart);
+  document.getElementById("overlay").addEventListener("click", closeCart);
+  document.getElementById("cancelEditBtn").addEventListener("click", resetForm);
+  document.getElementById("changeAdminPwdBtn").addEventListener("click", changeAdminPassword);
+  document.getElementById("searchInput").addEventListener("input", renderProducts);
+  document.getElementById("sortSelect").addEventListener("change", renderProducts);
+
+  document.getElementById("adminNavLink").addEventListener("click", (e) => {
+      e.preventDefault();
+      if (verifyAdminPassword("access Admin Panel")) {
+          const sec = document.getElementById("admin");
+          sec.style.display = "block";
+          sec.scrollIntoView({ behavior: "smooth" });
+      }
+  });
+
+  document.getElementById("categoryFilters").addEventListener("click", (e) => {
+      if (e.target.classList.contains("filter")) {
+          document.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
+          e.target.classList.add("active");
+          currentCategory = e.target.dataset.category;
+          renderProducts();
+      }
+  });
+
+  document.getElementById("applyPromoBtn").addEventListener("click", () => {
+      const code = document.getElementById("promoInput").value.trim().toUpperCase();
+      if (code === "MAGNET10") {
+          activePromoDiscount = 10;
+          document.getElementById("discountRow").style.display = "flex";
+          document.getElementById("discountAmount").textContent = "-10%";
+          updateCart();
+          alert("Promo code applied!");
+      } else {
+          alert("Invalid promo code.");
+      }
+  });
+
+  document.getElementById("orderWhatsAppBtn").addEventListener("click", () => {
+      if (cart.length === 0) return alert("Bag is empty.");
+      let msg = "Hello Magnet Store Kenya!%0A%0AI want to order:%0A";
+      let subtotal = 0;
+      
+      cart.forEach(i => {
+          msg += `- ${i.name} x${i.quantity} = KSh ${(i.price * i.quantity).toLocaleString()}%0A`;
+          subtotal += i.price * i.quantity;
+      });
+
+      let grandTotal = subtotal * (1 - activePromoDiscount / 100);
+      msg += `%0ATotal Amount: KSh ${grandTotal.toLocaleString()}`;
+
+      cart = [];
+      updateCart();
+      window.open(`https://wa.me/254743046135?text=${msg}`, "_blank");
+  });
+
+  document.getElementById('wishlistCount').textContent = wishlist.length;
 </script>
 </body>
 </html>
