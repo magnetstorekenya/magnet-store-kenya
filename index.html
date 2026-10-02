@@ -109,10 +109,6 @@
         .quantity button { width: 20px; height: 20px; border: 1px solid #ddd; border-radius: 50%; background: white; font-size: 11px; }
         .cart-footer { padding: 20px; border-top: 1px solid #eee; max-height: 50vh; overflow-y: auto; }
         .cart-total { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: bold; }
-        .discount-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; color: #27ae60; }
-        .promo-box { display: flex; gap: 6px; margin-bottom: 12px; }
-        .promo-box input { flex: 1; padding: 8px 12px; border: 1px solid #ddd; border-radius: 15px; font-size: 12px; outline: none; }
-        .promo-box button { padding: 8px 14px; background: #191513; color: white; border: none; border-radius: 15px; font-size: 11px; font-weight: bold; }
         .btn-full { width: 100%; padding: 12px; border: none; border-radius: 25px; font-weight: bold; margin-bottom: 8px; }
 
         /* FOOTER */
@@ -269,15 +265,6 @@
             <textarea id="custNotes" rows="2" placeholder="Delivery notes (optional, e.g. landmark)" style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; outline: none; resize: none;"></textarea>
         </div>
 
-        <!-- Promo Code Box -->
-        <div class="promo-box">
-            <input type="text" id="promoInput" placeholder="Promo Code (e.g. MAGNET10)">
-            <button id="applyPromoBtn">Apply</button>
-        </div>
-        <div class="discount-row" id="discountRow" style="display:none;">
-            <span>Discount Applied:</span>
-            <strong id="discountAmount">-KSh 0</strong>
-        </div>
         <div class="cart-total"><span>Total</span><strong id="cartTotal">KSh 0</strong></div>
         
         <!-- Action Buttons -->
@@ -393,7 +380,6 @@
   let products = [];
   let cart = [];
   let wishlist = JSON.parse(localStorage.getItem('magnet_wishlist')) || [];
-  let activePromoDiscount = 0;
   let currentCategory = "All";
 
   // PAGINATION STATE
@@ -787,11 +773,8 @@
           items.appendChild(row);
       });
 
-      let discountVal = (subtotal * activePromoDiscount) / 100;
-      let finalTotal = subtotal - discountVal;
-
       document.getElementById("cartCount").textContent = count;
-      document.getElementById("cartTotal").textContent = "KSh " + finalTotal.toLocaleString();
+      document.getElementById("cartTotal").textContent = "KSh " + subtotal.toLocaleString();
   }
 
   function changeQty(id, amt) {
@@ -856,19 +839,6 @@
       }
   });
 
-  document.getElementById("applyPromoBtn").addEventListener("click", () => {
-      const code = document.getElementById("promoInput").value.trim().toUpperCase();
-      if (code === "MAGNET10") {
-          activePromoDiscount = 10;
-          document.getElementById("discountRow").style.display = "flex";
-          document.getElementById("discountAmount").textContent = "-10%";
-          updateCart();
-          alert("Promo code applied!");
-      } else {
-          alert("Invalid promo code.");
-      }
-  });
-
   document.getElementById("orderWhatsAppBtn").addEventListener("click", () => {
       if (cart.length === 0) return alert("Your bag is empty.");
 
@@ -897,8 +867,7 @@
           subtotal += i.price * i.quantity;
       });
 
-      let grandTotal = subtotal * (1 - activePromoDiscount / 100);
-      msg += `%0A💰 *Total Amount:* KSh ${grandTotal.toLocaleString()}`;
+      msg += `%0A💰 *Total Amount:* KSh ${subtotal.toLocaleString()}`;
 
       cart = [];
       document.getElementById("custName").value = "";
