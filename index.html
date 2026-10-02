@@ -52,8 +52,8 @@
         .filter { border: 1px solid #ddd; background: white; border-radius: 25px; padding: 8px 16px; font-size: 12px; font-weight: bold; }
         .filter.active, .filter:hover { background: #191513; color: white; }
 
-        /* PRODUCTS GRID */
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+        /* PRODUCTS GRID (DESKTOP & LAPTOP) */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
         .product { background: white; border: 1px solid #e8ded9; border-radius: 22px; overflow: hidden; position: relative; transition: transform .2s ease; }
         .product:hover { transform: translateY(-3px); }
         .wishlist-btn { position: absolute; top: 12px; right: 12px; z-index: 5; background: rgba(255,255,255,0.85); border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #ccc; }
@@ -68,7 +68,7 @@
         .product-details h3:hover { color: #ad666b; }
         .rating { color: #f39c12; font-size: 12px; margin-bottom: 6px; }
         .rating span { color: #817670; font-size: 11px; margin-left: 4px; }
-        .product-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+        .product-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; flex-wrap: wrap; gap: 6px; }
         .price { font-weight: bold; font-size: 15px; }
         .add-button { background: #191513; color: white; border: none; border-radius: 20px; padding: 8px 12px; font-size: 11px; font-weight: bold; }
         .add-button:disabled { background: #ccc; cursor: not-allowed; }
@@ -137,6 +137,17 @@
             .hero, .admin-grid { grid-template-columns: 1fr; }
             .stat-grid { grid-template-columns: 1fr; }
         }
+
+        /* MOBILE PRODUCT GRID - 2 COLUMNS */
+        @media(max-width: 600px) {
+            .section { padding: 40px 4%; }
+            .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .product-image { height: 160px; }
+            .product-details { padding: 10px; }
+            .product-details h3 { font-size: 13px; }
+            .price { font-size: 13px; }
+            .add-button { padding: 6px 10px; font-size: 10px; width: 100%; }
+        }
     </style>
 </head>
 <body>
@@ -158,9 +169,9 @@
 
     <nav>
         <a href="#shop">Shop</a>
-        <a href="https://wa.me/254743046135?text=Hello%20Magnet%20Store%20Kenya!" target="_blank" style="color: #25D366;">WhatsApp</a>
-        <a href="https://instagram.com/magnetstorekenya" target="_blank" style="color: #E1306C;">Instagram</a>
-        <a href="https://facebook.com/magnetstorekenya" target="_blank" style="color: #1877F2;">Facebook</a>
+        <a href="https://wa.me/254700000000" target="_blank" style="color: #25D366;">WhatsApp</a>
+        <a href="https://www.instagram.com/magnetic_kenya?stkn=ODBtcW1lMGMzdTF1" target="_blank" style="color: #E1306C;">Instagram</a>
+        <a href="https://www.facebook.com/share/1HzNLaSCFw/" target="_blank" style="color: #1877F2;">Facebook</a>
         <a href="#admin" id="adminNavLink">Admin</a>
     </nav>
 
@@ -225,13 +236,13 @@
 </section>
 
 <div class="floating-socials">
-    <a href="https://wa.me/254743046135?text=Hello%20Magnet%20Store%20Kenya!" target="_blank" class="social-pill pill-wa">
+    <a href="https://wa.me/254700000000" target="_blank" class="social-pill pill-wa">
         💬 WhatsApp
     </a>
-    <a href="https://instagram.com/magnetstorekenya" target="_blank" class="social-pill pill-ig">
+    <a href="https://www.instagram.com/magnetic_kenya?stkn=ODBtcW1lMGMzdTF1" target="_blank" class="social-pill pill-ig">
         📸 Instagram
     </a>
-    <a href="https://facebook.com/magnetstorekenya" target="_blank" class="social-pill pill-fb">
+    <a href="https://www.facebook.com/share/1HzNLaSCFw/" target="_blank" class="social-pill pill-fb">
         👍 Facebook
     </a>
 </div>
@@ -350,9 +361,9 @@
     <h3>MAGNET STORE KENYA</h3>
     <p style="font-size: 12px; color: #aaa; margin-top: 5px;">Your ultimate destination for perfumes and skincare.</p>
     <div class="footer-socials">
-        <a href="https://wa.me/254743046135" target="_blank">WhatsApp</a>
-        <a href="https://instagram.com/magnetstorekenya" target="_blank">Instagram</a>
-        <a href="https://facebook.com/magnetstorekenya" target="_blank">Facebook</a>
+        <a href="https://wa.me/254700000000" target="_blank">WhatsApp</a>
+        <a href="https://www.instagram.com/magnetic_kenya?stkn=ODBtcW1lMGMzdTF1" target="_blank">Instagram</a>
+        <a href="https://www.facebook.com/share/1HzNLaSCFw/" target="_blank">Facebook</a>
     </div>
     <p style="font-size: 11px; color: #666;">© 2026 Magnet Store Kenya. All rights reserved.</p>
 </footer>
@@ -616,7 +627,6 @@
           if (imageUrlInput !== "") {
               imageDataUrl = imageUrlInput;
           } else if (fileInput.files && fileInput.files[0]) {
-              // Increased max width to 1200px and quality to 90% (0.90) for high resolution output
               imageDataUrl = await resizeAndCompressImage(fileInput.files[0], 1200, 0.90);
           }
 
@@ -680,7 +690,6 @@
       document.getElementById("admin").scrollIntoView({ behavior: "smooth" });
   }
 
-  // Updated image handling function to maintain high sharpness
   function resizeAndCompressImage(file, maxWidth = 1200, quality = 0.90) {
       return new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -702,7 +711,6 @@
                   canvas.height = height;
                   const ctx = canvas.getContext('2d');
                   
-                  // High-quality canvas rendering options
                   ctx.imageSmoothingEnabled = true;
                   ctx.imageSmoothingQuality = 'high';
                   
@@ -898,7 +906,7 @@
       updateCart();
       closeCart();
 
-      window.open(`https://wa.me/254743046135?text=${msg}`, "_blank");
+      window.open(`https://wa.me/254700000000?text=${msg}`, "_blank");
   });
 
   document.getElementById('wishlistCount').textContent = wishlist.length;
