@@ -61,7 +61,7 @@
         .stock-badge { position: absolute; top: 12px; left: 12px; z-index: 5; background: #191513; color: white; font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 12px; text-transform: uppercase; }
         .stock-badge.out { background: #e74c3c; }
         .product-image { height: 220px; background: #fcf7f5; cursor: pointer; position: relative; }
-        .product-image img { width: 100%; height: 100%; object-fit: cover; }
+        .product-image img { width: 100%; height: 100%; object-fit: cover; image-rendering: -webkit-optimize-contrast; }
         .product-details { padding: 16px; }
         .product-category { font-size: 10px; letter-spacing: 2px; color: #ae676c; font-weight: bold; text-transform: uppercase; }
         .product-details h3 { margin: 4px 0; font-size: 15px; cursor: pointer; }
@@ -401,8 +401,7 @@
       "Allure EDP", "Allure Homme Edition Blanche EDP", "Allure Homme Sport Cologne", "Allure Homme Sport EDT", "Allure Homme Sport Eau Extreme", "Bleu de Chanel EDT Pour Homme", "Bleu de Chanel EDP Pour Homme", "Bleu de Chanel Parfum Pour Homme", "Chance", "Chance Eau Splendide", "Chance Eau Tendre", "Chance EDP", "Coco EDP", "Coco Mademoiselle EDP", "Coco Mademoiselle Intense", "Coco Mademoiselle Eau Pour La Nuit", "Coco Noir EDP", "Gabrielle Chanel", "N°1 de Chanel L'Eau Rouge", "N°5", "N°5 L'Eau", "N°5 L'Eau Red Edition", "N°19 EDP",
       "Chloé EDP – Big", "Chloé EDP – Small",
       "Clinique Happy",
-      "Creed Aventus", "Creed Green Irish Tweed", "Creed Himalaya", "Creed Love in Black", "Creed Millésime Impérial", "Creed Royal Mayfair", "Creed Royal Princess Oud", "Creed Silver Mountain Water", "Creed Viking",
-      "Anthology La Roue de La Fortune 10", "Devotion EDP", "Devotion Pour Homme", "K EDT", "K Pour Homme EDP Intense", "Laila Malaki", "Light Blue Eau Pour Homme", "Light Blue Italian Zest", "Light Blue Love Is Love Pour Femme", "Light Blue Pour Homme Summer Vibes", "Pour Femme EDP", "Q EDP", "The One EDT", "The One EDP", "The One Desire EDP Intense", "The One Gold Intense", "The One Luminous Night", "The One Mysterious Night", "The One Only", "The One Only EDP", "The One Pour Homme EDT", "The One For Men Intense", "The One For Men Baroque Collector EDT",
+      "Creed Aventus", "Creed Green Irish Tweed", "Creed Himalaya", "Creed Love in Black", "Creed Millésime Impérial", "Creed Royal Mayfair", "Creed Royal Princess Oud", "Creed Silver Mountain Water", "Creed Viking", "Anthology La Roue de La Fortune 10", "Devotion EDP", "Devotion Pour Homme", "K EDT", "K Pour Homme EDP Intense", "Laila Malaki", "Light Blue Eau Pour Homme", "Light Blue Italian Zest", "Light Blue Love Is Love Pour Femme", "Light Blue Pour Homme Summer Vibes", "Pour Femme EDP", "Q EDP", "The One EDT", "The One EDP", "The One Desire EDP Intense", "The One Gold Intense", "The One Luminous Night", "The One Mysterious Night", "The One Only", "The One Only EDP", "The One Pour Homme EDT", "The One For Men Intense", "The One For Men Baroque Collector EDT",
       "Cool Water Reborn EDP Intense", "Cool Water Sea Rose Woman EDT", "Cool Water Woman",
       "Addict EDP", "Ambre Nuit EDP", "Balade Sauvage EDP", "Bois d'Argent", "Dioriviera", "Eden-Roc", "Fahrenheit", "Gris Dior EDP", "Homme EDT", "Homme Intense", "Homme Le Nouveau Parfum", "Homme Parfum", "Homme Sport", "Hypnotic Poison EDP", "Hypnotic Poison EDT", "J'adore", "J'adore EDT", "J'adore In Joy", "J'adore Parfum d'Eau", "Joy", "La Colle Noire", "Lucky EDP", "Midnight Poison", "Miss Dior Blooming Bouquet EDT", "Miss Dior EDP", "Miss Dior Parfum", "Miss Dior Absolutely Blooming", "Miss Dior Rose Essence – Big", "Miss Dior Rose Essence – Small", "Miss Dior Rose N'Roses", "Miss Dior Silky Body Mist", "New Look", "Oud Ispahan EDP", "Oud Rosewood EDP", "Poison EDP", "Poison Girl EDP", "Poison Girl EDT", "Pure Poison EDP", "Purple Oud EDP", "Rose Gipsy", "Rose Kabuki", "Sakura EDP", "Sauvage EDP", "Sauvage EDP Nouveau", "Sauvage Parfum", "Sauvage Elixir", "Sauvage Eau Forte", "The Cachemire",
       "Do Son EDT", "L'Eau EDT", "Desire For A Man EDT", "Signature Collection Amalfi Citrus", "Signature Collection Indian Sandalwood", "Signature Collection Moroccan Amber", "Signature Collection Valensole Lavender",
@@ -460,7 +459,7 @@
                   stock: 15,
                   rating: 5.0,
                   reviews: 12,
-                  image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=500&q=80",
+                  image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=800&q=85",
                   notes: "Designer fragrance, premium longevity.",
                   description: `Authentic designer perfume available exclusively at Magnet Store Kenya.`
               };
@@ -612,12 +611,13 @@
           const fileInput = document.getElementById("prodImageFile");
           
           let existingProduct = editId ? products.find(p => p.id == editId) : null;
-          let imageDataUrl = existingProduct ? existingProduct.image : "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=500&q=80";
+          let imageDataUrl = existingProduct ? existingProduct.image : "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=800&q=85";
 
           if (imageUrlInput !== "") {
               imageDataUrl = imageUrlInput;
           } else if (fileInput.files && fileInput.files[0]) {
-              imageDataUrl = await resizeAndCompressImage(fileInput.files[0], 500, 0.7);
+              // Increased max width to 1200px and quality to 90% (0.90) for high resolution output
+              imageDataUrl = await resizeAndCompressImage(fileInput.files[0], 1200, 0.90);
           }
 
           const productData = {
@@ -680,7 +680,8 @@
       document.getElementById("admin").scrollIntoView({ behavior: "smooth" });
   }
 
-  function resizeAndCompressImage(file, maxWidth = 500, quality = 0.7) {
+  // Updated image handling function to maintain high sharpness
+  function resizeAndCompressImage(file, maxWidth = 1200, quality = 0.90) {
       return new Promise((resolve, reject) => {
           const reader = new FileReader();
           reader.readAsDataURL(file);
@@ -700,6 +701,11 @@
                   canvas.width = width;
                   canvas.height = height;
                   const ctx = canvas.getContext('2d');
+                  
+                  // High-quality canvas rendering options
+                  ctx.imageSmoothingEnabled = true;
+                  ctx.imageSmoothingQuality = 'high';
+                  
                   ctx.drawImage(img, 0, 0, width, height);
                   
                   resolve(canvas.toDataURL('image/jpeg', quality));
