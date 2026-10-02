@@ -73,6 +73,10 @@
         .add-button { background: #191513; color: white; border: none; border-radius: 20px; padding: 8px 12px; font-size: 11px; font-weight: bold; }
         .add-button:disabled { background: #ccc; cursor: not-allowed; }
 
+        /* HIDE ADMIN BUTTONS UNLESS ADMIN MODE IS ACTIVE */
+        .admin-actions { display: none; gap: 5px; margin-top: 10px; border-top: 1px solid #eee; padding-top: 8px; }
+        body.admin-mode .admin-actions { display: flex; }
+
         /* PAGINATION STYLES */
         .pagination-container { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 40px; }
         .pagination-btn { background: #191513; color: white; border: none; padding: 10px 18px; border-radius: 20px; font-size: 12px; font-weight: bold; transition: opacity 0.2s ease; }
@@ -372,7 +376,6 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
   import { getDatabase, ref, onValue, push, update, remove, set } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
 
-  // Exact Firebase project configuration
   const firebaseConfig = {
     apiKey: "AIzaSyAPfYjbeIuc3_tphgik2gnuWvSv-kt3Tos",
     authDomain: "magnet-store-kenya-ae4cb.firebaseapp.com",
@@ -397,7 +400,6 @@
   let currentPage = 1;
   const productsPerPage = 12;
 
-  // Catalog Array Preset
   const catalogTemplate = [
       "Amouage Epic Man", "Amouage Gold Woman", "Amouage Interlude Woman", "Amouage Love Mimosa EDP", "Amouage Memoir",
       "Anna Sui Fantasia EDT", "Anna Sui Sky",
@@ -447,8 +449,7 @@
       "Polo Black", "Polo Red", "Polo Supreme Oud",
       "Richard Secret Side", "Nuit de Cellophane", "Chic Shaik No. 30", "Soleil Thé", "Kenzo Perfume", "Stella EDP", "Gumin", "Tuttle",
       "Tom Ford Bitter Peach", "Tom Ford Black Orchid EDP", "Tom Ford Black Orchid EDT", "Tom Ford Cherry Smoke", "Tom Ford Electric Cherry", "Tom Ford Ebene Fumé", "Tom Ford Fleur de Portofino", "Tom Ford Fucking Fabulous", "Tom Ford Fucking Fabulous Parfum", "Tom Ford Jasmin Rouge", "Tom Ford Lost Cherry", "Tom Ford Mandarino di Amalfi", "Tom Ford Metallique", "Tom Ford Myrrhe Mystère EDP", "Tom Ford Neroli Portofino", "Tom Ford Noir Extreme EDP", "Tom Ford Oud Minérale", "Tom Ford Oud Wood EDP", "Tom Ford Rose Exposed", "Tom Ford Soleil Blanc", "Tom Ford Tobacco Oud", "Tom Ford Tobacco Vanille", "Tom Ford Tuscan Leather", "Tom Ford Vanilla Sex", "Tom Ford Vanille Fatale", "Tom Ford Vanille Fatale 2024", "Tom Ford White Patchouli", "Tom Ford White Suede",
-      "Donna Born in Roma Coral Fantasy", "Donna Born in Roma Green Stravaganza", "Donna Born in Roma Pink PP", "Donna Born in Roma Yellow Dream", "Uomo Born in Roma Green Stravaganza", "Uomo Born in Roma Yellow Dream", "Uomo Intense EDP", "Valentina", "Valentina Oud Assoluto", "Valentina Rosa Assoluto",
-      "Atelier Éclat de Rose EDP", "Bright Crystal", "Bright Crystal Absolu", "Bright Crystal Pour Femme Parfum", "Crystal Noir", "Crystal Noir EDT", "Eros EDP", "Eros EDT", "Eros Energy", "Eros Flame", "Eros Flame EDP", "Eros Najim Pour Homme", "Eros Parfum", "Eros Pour Femme", "Eros Black", "Man Eau Fraîche Extreme", "Versace Pour Homme", "Versace Pour Homme Dylan Blue",
+      "Donna Born in Roma Coral Fantasy", "Donna Born in Roma Green Stravaganza", "Donna Born in Roma Pink PP", "Donna Born in Roma Yellow Dream", "Uomo Born in Roma Green Stravaganza", "Uomo Born in Roma Yellow Dream", "Uomo Intense EDP", "Valentina", "Valentina Oud Assoluto", "Valentina Rosa Assoluto", "Atelier Éclat de Rose EDP", "Bright Crystal", "Bright Crystal Absolu", "Bright Crystal Pour Femme Parfum", "Crystal Noir", "Crystal Noir EDT", "Eros EDP", "Eros EDT", "Eros Energy", "Eros Flame", "Eros Flame EDP", "Eros Najim Pour Homme", "Eros Parfum", "Eros Pour Femme", "Eros Black", "Man Eau Fraîche Extreme", "Versace Pour Homme", "Versace Pour Homme Dylan Blue",
       "Bombshell EDP", "Accento Overdose", "Casamorati Lira", "Coro", "Erba Gold", "Opera",
       "YSL Black Opium EDP", "YSL Black Opium EDP Gold", "YSL Black Opium Floral Shock", "YSL Black Opium Glitter", "YSL Black Opium Illicit Green", "YSL Black Opium Over Red", "YSL Cinéma", "La Nuit de L'Homme EDP", "La Nuit de L me Le Parfum", "YSL Libre EDP", "YSL Libre Collector Edition", "YSL Libre Collector Edition – Dress Me Wild", "YSL Libre Flowers & Flames", "YSL Libre Intense", "YSL Libre L'Eau Nue", "YSL Libre L'Absolu Platine", "YSL Libre Le Parfum", "YSL Manifesto"
   ];
@@ -534,7 +535,6 @@
           return;
       }
 
-      // Slice products for current page
       const startIndex = (currentPage - 1) * productsPerPage;
       const endIndex = startIndex + productsPerPage;
       const pageProducts = filtered.slice(startIndex, endIndex);
@@ -564,7 +564,7 @@
                       </button>
                   </div>
 
-                  <div style="display:flex; gap:5px; margin-top:10px; border-top:1px solid #eee; padding-top:8px;">
+                  <div class="admin-actions">
                       <button class="edit-btn action-btn-sm" style="flex:1; border:1px solid #743b40; color:#743b40; background:none; border-radius:12px;">✏ Edit</button>
                       <button class="delete-btn action-btn-sm" style="flex:1; border:1px solid #e74c3c; color:#e74c3c; background:none; border-radius:12px;">🗑 Delete</button>
                   </div>
@@ -822,6 +822,7 @@
   document.getElementById("cancelEditBtn").addEventListener("click", resetForm);
   document.getElementById("changeAdminPwdBtn").addEventListener("click", changeAdminPassword);
   document.getElementById("closeAdminBtn").addEventListener("click", () => {
+      document.body.classList.remove("admin-mode");
       document.getElementById("admin").style.display = "none";
   });
   
@@ -838,6 +839,7 @@
   document.getElementById("adminNavLink").addEventListener("click", (e) => {
       e.preventDefault();
       if (verifyAdminPassword("access Admin Panel")) {
+          document.body.classList.add("admin-mode");
           const sec = document.getElementById("admin");
           sec.style.display = "block";
           sec.scrollIntoView({ behavior: "smooth" });
