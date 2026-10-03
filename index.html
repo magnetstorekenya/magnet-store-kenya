@@ -66,8 +66,12 @@
         .product-category { font-size: 10px; letter-spacing: 2px; color: #ae676c; font-weight: bold; text-transform: uppercase; }
         .product-details h3 { margin: 4px 0; font-size: 15px; cursor: pointer; }
         .product-details h3:hover { color: #ad666b; }
-        .rating { color: #f39c12; font-size: 12px; margin-bottom: 6px; }
+        .rating { color: #f39c12; font-size: 12px; margin-bottom: 4px; }
         .rating span { color: #817670; font-size: 11px; margin-left: 4px; }
+
+        /* SOCIAL PROOF BADGE ON CARDS */
+        .card-social-proof { display: inline-flex; align-items: center; gap: 4px; background: #fff8f0; border: 1px solid #ffe4cc; color: #c25e00; font-size: 0.72rem; font-weight: 600; padding: 2px 8px; border-radius: 12px; margin-bottom: 6px; }
+
         .product-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; flex-wrap: wrap; gap: 6px; }
         .price { font-weight: bold; font-size: 15px; }
         .add-button { background: #191513; color: white; border: none; border-radius: 20px; padding: 8px 12px; font-size: 11px; font-weight: bold; }
@@ -91,11 +95,37 @@
         .pill-ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
         .pill-fb { background: #1877F2; }
 
+        /* LIVE SOCIAL PROOF TOAST POPUP */
+        .proof-toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #ffffff;
+            border: 1px solid #efe4df;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            border-radius: 12px;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease-in-out;
+            pointer-events: none;
+        }
+        .proof-toast.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .toast-text { margin: 0; font-size: 0.8rem; font-weight: 600; color: #191513; }
+        .toast-time { font-size: 0.7rem; color: #817670; }
+
         /* MODALS & OVERLAYS */
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: none; z-index: 900; }
         .overlay.show { display: block; }
 
-        /* FIXED MOBILE-OPTIMIZED CART DRAWER */
+        /* CART DRAWER */
         .cart { 
             position: fixed; 
             top: 0; 
@@ -166,7 +196,7 @@
             .stat-grid { grid-template-columns: 1fr; }
         }
 
-        /* MOBILE PRODUCT GRID - 2 COLUMNS */
+        /* MOBILE PRODUCT GRID */
         @media(max-width: 600px) {
             .section { padding: 40px 4%; }
             .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
@@ -175,6 +205,7 @@
             .product-details h3 { font-size: 13px; }
             .price { font-size: 13px; }
             .add-button { padding: 6px 10px; font-size: 10px; width: 100%; }
+            .proof-toast { bottom: 85px; right: 15px; left: 15px; }
         }
     </style>
 </head>
@@ -266,6 +297,15 @@
     <a href="https://wa.me/254743046135" target="_blank" class="social-pill pill-wa">💬 WhatsApp</a>
     <a href="https://www.instagram.com/magnetic_kenya" target="_blank" class="social-pill pill-ig">📸 Instagram</a>
     <a href="https://www.facebook.com/share/1HzNLaSCFw/" target="_blank" class="social-pill pill-fb">👍 Facebook</a>
+</div>
+
+<!-- FLOATING SOCIAL PROOF TOAST -->
+<div id="social-proof-toast" class="proof-toast">
+    <span style="font-size: 1.2rem;">🛍️</span>
+    <div>
+        <p id="toast-text" class="toast-text"></p>
+        <span class="toast-time">Verified order • Just now</span>
+    </div>
 </div>
 
 <div class="overlay" id="overlay"></div>
@@ -462,6 +502,8 @@
       "YSL Black Opium EDP", "YSL Black Opium EDP Gold", "YSL Black Opium Floral Shock", "YSL Black Opium Glitter", "YSL Black Opium Illicit Green", "YSL Black Opium Over Red", "YSL Cinéma", "La Nuit de L'Homme EDP", "La Nuit de L me Le Parfum", "YSL Libre EDP", "YSL Libre Collector Edition", "YSL Libre Collector Edition – Dress Me Wild", "YSL Libre Flowers & Flames", "YSL Libre Intense", "YSL Libre L'Eau Nue", "YSL Libre L'Absolu Platine", "YSL Libre Le Parfum", "YSL Manifesto"
   ];
 
+  const mockLocations = ["Nairobi", "Westlands", "Kilimani", "Lavington", "Karen", "Mombasa", "Nakuru", "Eldoret"];
+
   const dbRef = ref(db, 'products');
   let isSeeding = false;
 
@@ -547,10 +589,13 @@
       const endIndex = startIndex + productsPerPage;
       const pageProducts = filtered.slice(startIndex, endIndex);
 
-      pageProducts.forEach(p => {
+      pageProducts.forEach((p, index) => {
           const isWishlisted = wishlist.includes(p.id);
           const isOutOfStock = (p.stock <= 0);
           const isLowStock = (p.stock > 0 && p.stock <= 3);
+
+          // Dynamic purchase prop counter based on item index for realistic variation
+          const fakePurchasedCount = 8 + (index * 3) % 15;
 
           const card = document.createElement("div");
           card.className = "product";
@@ -565,6 +610,12 @@
                   <div class="product-category">${p.category}</div>
                   <h3>${p.name}</h3>
                   <div class="rating">★ ${p.rating || 5.0} <span>(${p.reviews || 10})</span></div>
+                  
+                  <div class="card-social-proof">
+                      <span>🔥</span>
+                      <span>${fakePurchasedCount}+ bought this week</span>
+                  </div>
+
                   <div class="product-bottom">
                       <span class="price">KSh ${(p.price || 6500).toLocaleString()}</span>
                       <button class="add-button" ${isOutOfStock ? 'disabled' : ''}>
@@ -590,6 +641,28 @@
       updatePaginationUI(filtered.length, totalPages);
       document.getElementById("statProducts").textContent = products.length;
   }
+
+  /* LIVE TOAST NOTIFICATION SCRIPT */
+  function triggerProofToast() {
+      if (products.length === 0) return;
+      const toast = document.getElementById("social-proof-toast");
+      const textEl = document.getElementById("toast-text");
+
+      const randomLoc = mockLocations[Math.floor(Math.random() * mockLocations.length)];
+      const randomProd = products[Math.floor(Math.random() * products.length)];
+
+      textEl.innerText = `Someone in ${randomLoc} bought ${randomProd.name}`;
+
+      toast.classList.add("active");
+
+      setTimeout(() => {
+          toast.classList.remove("active");
+      }, 4500);
+  }
+
+  // Trigger first toast after 6s, then cycle every 22s
+  setTimeout(triggerProofToast, 6000);
+  setInterval(triggerProofToast, 22000);
 
   function updatePaginationUI(totalItems, totalPages) {
       const prevBtn = document.getElementById("prevPageBtn");
