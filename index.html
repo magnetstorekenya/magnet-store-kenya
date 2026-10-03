@@ -11,8 +11,43 @@
         a { text-decoration: none; color: inherit; }
         button { cursor: pointer; }
 
-        /* ANNOUNCEMENT BANNER */
-        .announcement-bar { background: #743b40; color: #ffffff; text-align: center; padding: 8px 15px; font-size: 12px; font-weight: bold; letter-spacing: 0.5px; position: relative; z-index: 1001; }
+        /* PROMOTIONAL BANNER */
+        .announcement-bar { 
+            background: #191513; 
+            border-bottom: 1px solid #743b40; 
+            padding: 10px 15px; 
+            position: relative; 
+            z-index: 1001; 
+        }
+        .promo-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        .promo-tag {
+            background: #743b40;
+            color: #ffffff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+        .promo-text {
+            color: #ffffff;
+        }
+        .promo-timer {
+            background: rgba(239, 208, 203, 0.15);
+            color: #efd0cb;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 13px;
+        }
 
         /* HEADER */
         header { position: sticky; top: 0; z-index: 1000; background: rgba(251, 248, 245, 0.96); border-bottom: 1px solid #eee; padding: 12px 7%; display: flex; align-items: center; justify-content: space-between; }
@@ -211,8 +246,17 @@
 </head>
 <body>
 
+<!-- PROMOTIONAL TIMER BANNER -->
 <div class="announcement-bar" id="announcementBar">
-    ✨ Free Delivery across Nairobi for orders over KSh 5,000! Use code MAGNET10 for 10% OFF!
+    <div class="promo-content">
+        <span class="promo-tag">🔥 LIMITED EXCLUSIVE OFFER</span>
+        <span class="promo-text">Get 5% OFF your first designer fragrance! Ends in:</span>
+        <div class="promo-timer">
+            <span id="timer-hours">02</span>h : 
+            <span id="timer-minutes">45</span>m : 
+            <span id="timer-seconds">00</span>s
+        </div>
+    </div>
 </div>
 
 <header>
@@ -448,6 +492,27 @@
   let currentPage = 1;
   const productsPerPage = 12;
 
+  // ANIMATED PROP TIMER FUNCTION
+  function startPropTimer(durationInSeconds) {
+      let timer = durationInSeconds;
+      setInterval(() => {
+          let hours = Math.floor(timer / 3600);
+          let minutes = Math.floor((timer % 3600) / 60);
+          let seconds = Math.floor(timer % 60);
+
+          document.getElementById('timer-hours').textContent = String(hours).padStart(2, '0');
+          document.getElementById('timer-minutes').textContent = String(minutes).padStart(2, '0');
+          document.getElementById('timer-seconds').textContent = String(seconds).padStart(2, '0');
+
+          if (--timer < 0) {
+              timer = durationInSeconds; // Automatically resets back to 2h 45m
+          }
+      }, 1000);
+  }
+
+  // Start 2h 45m countdown loop
+  startPropTimer(9900);
+
   const catalogTemplate = [
       "Amouage Epic Man", "Amouage Gold Woman", "Amouage Interlude Woman", "Amouage Love Mimosa EDP", "Amouage Memoir",
       "Anna Sui Fantasia EDT", "Anna Sui Sky",
@@ -594,7 +659,6 @@
           const isOutOfStock = (p.stock <= 0);
           const isLowStock = (p.stock > 0 && p.stock <= 3);
 
-          // Dynamic purchase prop counter based on item index for realistic variation
           const fakePurchasedCount = 8 + (index * 3) % 15;
 
           const card = document.createElement("div");
@@ -642,7 +706,6 @@
       document.getElementById("statProducts").textContent = products.length;
   }
 
-  /* LIVE TOAST NOTIFICATION SCRIPT */
   function triggerProofToast() {
       if (products.length === 0) return;
       const toast = document.getElementById("social-proof-toast");
@@ -660,7 +723,6 @@
       }, 4500);
   }
 
-  // Trigger first toast after 6s, then cycle every 22s
   setTimeout(triggerProofToast, 6000);
   setInterval(triggerProofToast, 22000);
 
