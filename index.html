@@ -126,6 +126,7 @@
         .floating-socials { position: fixed; bottom: 20px; left: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; }
         .social-pill { display: flex; align-items: center; gap: 8px; color: white; padding: 9px 14px; border-radius: 25px; font-size: 12px; font-weight: bold; text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,0.18); transition: transform 0.2s ease; }
         .social-pill:hover { transform: scale(1.05); }
+        .pill-call { background: #743b40; }
         .pill-wa { background: #25D366; }
         .pill-ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
         .pill-fb { background: #1877F2; }
@@ -205,6 +206,17 @@
         .btn-full { width: 100%; padding: 12px; border: none; border-radius: 25px; font-weight: bold; margin-bottom: 8px; font-size: 13px; }
         .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: #555; }
 
+        /* TILL BOX INSTRUCTION STYLES */
+        .till-instruction-box {
+            background: #f7f9f8;
+            border: 1px solid #a8e0bc;
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 8px;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
         /* FOOTER */
         footer { background: #191513; color: white; padding: 40px 7%; text-align: center; }
         .footer-socials { display: flex; justify-content: center; gap: 20px; margin: 15px 0; }
@@ -272,8 +284,9 @@
 
     <nav>
         <a href="#shop">Shop</a>
-        <a href="https://wa.me/254743046135" target="_blank" style="color: #25D366;">WhatsApp</a>
-        <a href="https://www.instagram.com/magnetic_kenya" target="_blank" style="color: #E1306C;">Instagram</a>
+        <a href="tel:+254720401642" style="color: #743b40;">📞 Call Us</a>
+        <a href="https://wa.me/254720401642" target="_blank" style="color: #25D366;">WhatsApp</a>
+        <a href="https://www.instagram.com/magnetic_kenya?stkn=ODBtcW1lMGMzdTF1" target="_blank" style="color: #E1306C;">Instagram</a>
         <a href="https://www.facebook.com/share/1HzNLaSCFw/" target="_blank" style="color: #1877F2;">Facebook</a>
         <a href="#admin" id="adminNavLink">Admin</a>
     </nav>
@@ -338,14 +351,15 @@
 </section>
 
 <div class="floating-socials">
-    <a href="https://wa.me/254743046135" target="_blank" class="social-pill pill-wa">💬 WhatsApp</a>
-    <a href="https://www.instagram.com/magnetic_kenya" target="_blank" class="social-pill pill-ig">📸 Instagram</a>
+    <a href="tel:+254720401642" class="social-pill pill-call">📞 Call Us</a>
+    <a href="https://wa.me/254720401642" target="_blank" class="social-pill pill-wa">💬 WhatsApp</a>
+    <a href="https://www.instagram.com/magnetic_kenya?stkn=ODBtcW1lMGMzdTF1" target="_blank" class="social-pill pill-ig">📸 Instagram</a>
     <a href="https://www.facebook.com/share/1HzNLaSCFw/" target="_blank" class="social-pill pill-fb">👍 Facebook</a>
 </div>
 
 <!-- FLOATING SOCIAL PROOF TOAST -->
 <div id="social-proof-toast" class="proof-toast">
-    <span style="font-size: 1.2rem;">🛍️</span>
+    <span style="font-size: 1.2rem;">🛍</span>
     <div>
         <p id="toast-text" class="toast-text"></p>
         <span class="toast-time">Verified order • Just now</span>
@@ -354,7 +368,7 @@
 
 <div class="overlay" id="overlay"></div>
 
-<!-- CART DRAWER WITH FIXED BOTTOM BUTTON -->
+<!-- CART DRAWER WITH TILL PAYMENT INTEGRATION -->
 <div class="cart" id="cart">
     <div class="cart-header">
         <h2>Your Bag</h2>
@@ -369,7 +383,26 @@
             <input type="text" id="custName" placeholder="Full Name *" style="width: 100%; padding: 8px 12px; margin-bottom: 6px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; outline: none;">
             <input type="tel" id="custPhone" placeholder="Phone Number *" style="width: 100%; padding: 8px 12px; margin-bottom: 6px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; outline: none;">
             <input type="text" id="custLocation" placeholder="Delivery Location / Building / Estate *" style="width: 100%; padding: 8px 12px; margin-bottom: 6px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; outline: none;">
-            <textarea id="custNotes" rows="2" placeholder="Delivery notes (optional, e.g. landmark)" style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; outline: none; resize: none;"></textarea>
+            
+            <p style="font-size: 12px; font-weight: bold; margin-top: 10px; margin-bottom: 6px; color: #743b40;">💳 Payment Option</p>
+            <select id="custPayment" style="width: 100%; padding: 8px 12px; margin-bottom: 6px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; outline: none; background: white;">
+                <option value="Pay on Delivery">Pay on Delivery (Cash / M-PESA on Arrival)</option>
+                <option value="Pay Online via M-PESA Till">Pay Online via M-PESA Till Number</option>
+            </select>
+
+            <!-- TILL DETAILS INSTRUCTION BOX -->
+            <div id="tillInstructionBox" class="till-instruction-box" style="display: none;">
+                <p style="font-weight: bold; color: #1b5e20; margin-bottom: 4px;">📲 How to Pay via Till:</p>
+                <ol style="padding-left: 18px; color: #333; margin-bottom: 8px; line-height: 1.4;">
+                    <li>Go to M-PESA menu & select <strong>Lipa na M-PESA</strong>.</li>
+                    <li>Select <strong>Buy Goods and Services</strong>.</li>
+                    <li>Enter Till Number: <strong style="color: #743b40; font-size: 14px;">8307372</strong></li>
+                    <li>Enter total order amount & confirm PIN.</li>
+                </ol>
+                <input type="text" id="custTransactionCode" placeholder="Enter M-PESA Code (e.g. SAB1234567) *" style="width: 100%; padding: 8px 12px; border: 1px solid #1b5e20; border-radius: 8px; font-size: 12px; outline: none; background: #fff;">
+            </div>
+
+            <textarea id="custNotes" rows="2" placeholder="Delivery notes (optional, e.g. landmark)" style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; outline: none; resize: none; margin-top: 4px;"></textarea>
         </div>
     </div>
 
@@ -459,8 +492,9 @@
     <h3>MAGNET STORE KENYA</h3>
     <p style="font-size: 12px; color: #aaa; margin-top: 5px;">Your ultimate destination for perfumes and skincare.</p>
     <div class="footer-socials">
-        <a href="https://wa.me/254743046135" target="_blank">WhatsApp</a>
-        <a href="https://www.instagram.com/magnetic_kenya" target="_blank">Instagram</a>
+        <a href="tel:+254720401642">📞 Call Us</a>
+        <a href="https://wa.me/254720401642" target="_blank">WhatsApp</a>
+        <a href="https://www.instagram.com/magnetic_kenya?stkn=ODBtcW1lMGMzdTF1" target="_blank">Instagram</a>
         <a href="https://www.facebook.com/share/1HzNLaSCFw/" target="_blank">Facebook</a>
     </div>
     <p style="font-size: 11px; color: #666;">© 2026 Magnet Store Kenya. All rights reserved.</p>
@@ -505,12 +539,11 @@
           document.getElementById('timer-seconds').textContent = String(seconds).padStart(2, '0');
 
           if (--timer < 0) {
-              timer = durationInSeconds; // Automatically resets back to 2h 45m
+              timer = durationInSeconds;
           }
       }, 1000);
   }
 
-  // Start 2h 45m countdown loop
   startPropTimer(9900);
 
   const catalogTemplate = [
@@ -539,14 +572,13 @@
       "Bamboo Limited Edition", "Bloom", "Bloom Acqua di Fiori", "Bloom EDP", "Bloom Intense", "Bloom Profumo di Fiori", "EDP 2", "Flora EDP", "Flora Gorgeous Gardenia EDP", "Flora Gorgeous Gardenia EDT", "Flora Gorgeous Gardenia EDT Bella", "Flora Gorgeous Gardenia EDP Intense", "Flora Gorgeous Magnolia EDP", "Flora Gorgeous Orchid EDP", "Flora Limited Edition Gorgeous Gardenia EDT", "Guilty Absolute Pour Femme EDP", "Guilty Absolute Pour Homme", "Guilty EDT", "Guilty Elixir de Parfum Pour Femme", "Guilty Elixir de Parfum Pour Homme", "Guilty Essence Pour Homme", "Guilty Love Edition Pour Femme", "Guilty Love Edition Pour Femme 2024", "Guilty Love Edition Pour Homme", "Guilty Oud EDP", "Guilty Pour Homme EDT", "Guilty Pour Homme Parfum", "Gucci Pour Homme EDT",
       "Épices Exquises Absolus Allegoria", "Habit Rouge EDP", "L'Homme Idéal L'Intense", "La Petite Robe Noire EDT", "La Petite Robe Noire EDP", "Oud Essentiel Absolus Allegoria", "Santal Royal Absolus Allegoria", "Shalimar EDP",
       "Barénia EDP", "H24 EDP", "Twilly d'Hermès",
-      "L'Eau Majeure d'Issey", "Nuit d'Issey Noir Argent", "Issey Miyake Pour Homme",
-      "Gaultier Divine", "Le Beau", "Le Male Elixir", "Le Male Lover", "Scandal EDP", "Scandal Le Parfum", "So Scandal EDP", "Ultra Male", "JPG² EDP",
+      "L'Eau Majeure d'Issey", "Nuit d'Issey Noir Argent", "Issey Miyake Pour Homme", "Gaultier Divine", "Le Beau", "Le Male Elixir", "Le Male Lover", "Scandal EDP", "Scandal Le Parfum", "So Scandal EDP", "Ultra Male", "JPG² EDP",
       "Blackberry & Bay Cologne", "English Pear & Freesia Cologne", "Peony & Blush Suede", "Red Roses Cologne", "Wild Bluebell",
       "Deja Vu White Flower 57", "Eden Sparkling Lychee 39", "Fleur Majesty Rose Royale 31", "Vanilla Candy Rock Sugar 42",
       "Apple Brandy on the Rocks", "Black Phantom Memento Mori EDP", "Blue Moon Ginger Dash", "Good Girl Gone Bad EDP", "Good Girl Gone Bad Extreme", "Imperial Tea 2024", "Sacred Wood EDP", "Smoking Hot", "Voulez-Vous Coucher Avec Moi",
       "Lacoste Blanc", "Lacoste Blanc-Pure", "Challenge Pour Homme EDT", "L'Homme EDT", "Lacoste Pour Homme EDT", "Pour Lui Magnetic", "Original EDP", "Lacoste Rouge", "Lacoste Yellow",
       "Encre Indigo", "Encre Noire EDT", "Encre Noire Pour Homme EDT",
-      "Idôle", "Idôle Le Grand Parfum", "Idôle Power Intense", "La Vie Est Belle", "La Vie Est Belle L'Eau de Parfum", "La Vie Est Belle Flowers of Happiness", "La Vie Est Belle Iris Absolu", "La Vie Est Belle L'Elixir", "La Vie Est Belle L'Extrait", "La Vie Est Belle Vanille Nude", "Magnolia Rosae", "Miracle Blossom", "Oud Bouquet", "Peut-Être EDP", "Trésor Midnight Rose",
+      "Idôle", "Idôle Le Grand Parfum", "Idôle Power Intense", "La Vie Est Belle", "La Vie Est Belle L'Eau de Parfum", "La Vie Est Belle Flowers of Happiness", "La Vie Est Belle Iris Absolu", "La Vie Est Belle L'Elixir", "La Vie Est Belle LExtrait", "La Vie Est Belle Vanille Nude", "Magnolia Rosae", "Miracle Blossom", "Oud Bouquet", "Peut-Être EDP", "Trésor Midnight Rose",
       "Jameela EDP", "Sense EDP", "Louis Vuitton Apogée", "Louis Vuitton Le Jour Se Lève", "Louis Vuitton Mille Feux", "Louis Vuitton Spell On You",
       "À La Rose", "Baccarat Rouge 540 EDP", "Baccarat Rouge 540 Extrait", "Oud Silk Mood",
       "Across Sands", "Flying", "Gold Intensive Aoud", "Pearl", "Purple Flowers", "Red Tobacco",
@@ -567,7 +599,10 @@
       "YSL Black Opium EDP", "YSL Black Opium EDP Gold", "YSL Black Opium Floral Shock", "YSL Black Opium Glitter", "YSL Black Opium Illicit Green", "YSL Black Opium Over Red", "YSL Cinéma", "La Nuit de L'Homme EDP", "La Nuit de L me Le Parfum", "YSL Libre EDP", "YSL Libre Collector Edition", "YSL Libre Collector Edition – Dress Me Wild", "YSL Libre Flowers & Flames", "YSL Libre Intense", "YSL Libre L'Eau Nue", "YSL Libre L'Absolu Platine", "YSL Libre Le Parfum", "YSL Manifesto"
   ];
 
-  const mockLocations = ["Nairobi", "Westlands", "Kilimani", "Lavington", "Karen", "Mombasa", "Nakuru", "Eldoret"];
+  const mockLocations = [
+      "Nairobi - Westlands", "Nairobi - Kilimani", "Nairobi - Lavington", "Nairobi - Karen", "Nairobi - Eastleigh",
+      "Nairobi - CBD", "Mombasa - Nyali", "Mombasa - CBD", "Nakuru", "Eldoret", "Kisumu", "Thika", "Nyeri", "Naivasha", "Machakos", "Meru", "Kitengela", "Ruiru", "Malindi", "Kericho"
+  ];
 
   const dbRef = ref(db, 'products');
   let isSeeding = false;
@@ -602,7 +637,7 @@
   });
 
   function getAdminPassword() {
-      return localStorage.getItem('magnet_admin_password') || "admin123";
+      return localStorage.getItem('magnet_admin_password') || "tyler";
   }
 
   function verifyAdminPassword(actionName) {
@@ -751,6 +786,16 @@
 
   document.getElementById("prevPageBtn").addEventListener("click", () => changePage(-1));
   document.getElementById("nextPageBtn").addEventListener("click", () => changePage(1));
+
+  // SHOW/HIDE TILL INSTRUCTION BOX BASED ON SELECT
+  document.getElementById("custPayment").addEventListener("change", function() {
+      const tillBox = document.getElementById("tillInstructionBox");
+      if (this.value === "Pay Online via M-PESA Till") {
+          tillBox.style.display = "block";
+      } else {
+          tillBox.style.display = "none";
+      }
+  });
 
   document.getElementById("addProductForm").addEventListener("submit", async function(e) {
       e.preventDefault();
@@ -1002,10 +1047,16 @@
       const name = document.getElementById("custName").value.trim();
       const phone = document.getElementById("custPhone").value.trim();
       const location = document.getElementById("custLocation").value.trim();
+      const payment = document.getElementById("custPayment").value;
+      const transCode = document.getElementById("custTransactionCode").value.trim();
       const notes = document.getElementById("custNotes").value.trim();
 
       if (!name || !phone || !location) {
           return alert("Please fill in your Name, Phone Number, and Delivery Location before ordering.");
+      }
+
+      if (payment === "Pay Online via M-PESA Till" && !transCode) {
+          return alert("Please enter your M-PESA Transaction Code after paying to complete your online order.");
       }
 
       let msg = `Hello Magnet Store Kenya!%0A%0A`;
@@ -1013,6 +1064,12 @@
       msg += `- Name: ${encodeURIComponent(name)}%0A`;
       msg += `- Phone: ${encodeURIComponent(phone)}%0A`;
       msg += `- Location: ${encodeURIComponent(location)}%0A`;
+      msg += `- Payment Method: ${encodeURIComponent(payment)}%0A`;
+      
+      if (payment === "Pay Online via M-PESA Till" && transCode) {
+          msg += `- M-PESA Code: ${encodeURIComponent(transCode.toUpperCase())}%0A`;
+      }
+
       if (notes) {
           msg += `- Notes: ${encodeURIComponent(notes)}%0A`;
       }
@@ -1030,11 +1087,15 @@
       document.getElementById("custName").value = "";
       document.getElementById("custPhone").value = "";
       document.getElementById("custLocation").value = "";
+      document.getElementById("custTransactionCode").value = "";
       document.getElementById("custNotes").value = "";
+      document.getElementById("tillInstructionBox").style.display = "none";
+      document.getElementById("custPayment").value = "Pay on Delivery";
+      
       updateCart();
       closeCart();
 
-      window.open(`https://wa.me/254743046135?text=${msg}`, "_blank");
+      window.open(`https://wa.me/254720401642?text=${msg}`, "_blank");
   });
 
   document.getElementById('wishlistCount').textContent = wishlist.length;
