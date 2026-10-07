@@ -467,7 +467,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-  import { getDatabase, ref, onValue, push, update, remove, set } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
+  import { getDatabase, ref, get, onValue, push, update, remove } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAPfYjbeIuc3_tphgik2gnuWvSv-kt3Tos",
@@ -569,52 +569,64 @@
   ];
 
   const dbRef = ref(db, 'products');
-  let isSeeding = false;
 
-  onValue(dbRef, async (snapshot) => {
-      const data = snapshot.val();
-      if (!data && !isSeeding) {
-          isSeeding = true;
-          const productsRef = ref(db, 'products');
-          let currentBatch = {};
-          let batchCount = 0;
+  // Refactored Database Initialization & Listener Logic
+  async function initDatabaseAndListen() {
+      try {
+          const snapshot = await get(dbRef);
+          
+          if (!snapshot.exists()) {
+              console.log("Database is empty. Seeding catalog in batches of 50...");
+              let currentBatch = {};
+              let batchCount = 0;
 
-          for (const name of catalogTemplate) {
-              const newKey = push(productsRef).key;
-              currentBatch[newKey] = {
-                  name: name,
-                  category: "Perfumes",
-                  price: 6500,
-                  stock: 15,
-                  rating: 5.0,
-                  reviews: 12,
-                  image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=800&q=85",
-                  notes: "Designer fragrance, premium longevity.",
-                  description: `Authentic designer perfume available exclusively at Magnet Store Kenya.`
-              };
-              batchCount++;
+              for (const name of catalogTemplate) {
+                  const newKey = push(dbRef).key;
+                  currentBatch[newKey] = {
+                      name: name,
+                      category: "Perfumes",
+                      price: 6500,
+                      stock: 15,
+                      rating: 5.0,
+                      reviews: 12,
+                      image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=800&q=85",
+                      notes: "Designer fragrance, premium longevity.",
+                      description: `Authentic designer perfume available exclusively at Magnet Store Kenya.`
+                  };
+                  batchCount++;
 
-              // Commit in batches of 50 to prevent timeout/payload limit errors
-              if (batchCount >= 50) {
-                  await update(productsRef, currentBatch);
-                  currentBatch = {};
-                  batchCount = 0;
+                  if (batchCount >= 50) {
+                      await update(dbRef, currentBatch);
+                      currentBatch = {};
+                      batchCount = 0;
+                  }
               }
+
+              if (Object.keys(currentBatch).length > 0) {
+                  await update(dbRef, currentBatch);
+              }
+              console.log("Catalog seeding completed successfully!");
           }
 
-          // Commit any remaining items
-          if (Object.keys(currentBatch).length > 0) {
-              await update(productsRef, currentBatch);
-          }
+          // Real-time listener for live updates, sync, and admin edits
+          onValue(dbRef, (snap) => {
+              const liveData = snap.val();
+              if (liveData) {
+                  products = Object.keys(liveData).map(key => ({ id: key, ...liveData[key] }));
+                  renderProducts();
+              } else {
+                  products = [];
+                  renderProducts();
+              }
+          });
 
-          isSeeding = false;
-      } else if (data) {
-          products = Object.keys(data).map(key => ({ id: key, ...data[key] }));
-          renderProducts();
+      } catch (error) {
+          console.error("Database initialization error:", error);
       }
-  }, (error) => {
-      console.error("Database error:", error);
-  });
+  }
+
+  // Start initialization
+  initDatabaseAndListen();
 
   function getAdminPassword() {
       return localStorage.getItem('magnet_admin_password') || "tyler";
