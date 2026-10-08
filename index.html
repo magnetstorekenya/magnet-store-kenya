@@ -617,7 +617,7 @@
               ${isOutOfStock ? `<span class="stock-badge out">Sold Out</span>` : (isLowStock ? `<span class="stock-badge">Low Stock (${p.stock})</span>` : '')}
               
               <div class="product-image">
-                  <img src="${p.image}" alt="${p.name}" loading="lazy" decoding="async">
+                  <img src="${p.image}" alt="${p.name}" loading="eager" decoding="async">
               </div>
               <div class="product-details">
                   <div class="product-category">${p.category}</div>
