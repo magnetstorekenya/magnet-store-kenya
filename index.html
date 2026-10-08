@@ -519,7 +519,6 @@
 
   function initDatabaseAndListen() {
       try {
-          // Direct, lightweight listener optimized for mobile and desktop devices
           onValue(dbRef, (snap) => {
               const liveData = snap.val();
               if (liveData) {
