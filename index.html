@@ -570,7 +570,6 @@
 
   const dbRef = ref(db, 'products');
 
-  // Refactored Database Initialization & Listener Logic
   async function initDatabaseAndListen() {
       try {
           const snapshot = await get(dbRef);
@@ -589,7 +588,7 @@
                       stock: 15,
                       rating: 5.0,
                       reviews: 12,
-                      image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=800&q=85",
+                      image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=400&q=80",
                       notes: "Designer fragrance, premium longevity.",
                       description: `Authentic designer perfume available exclusively at Magnet Store Kenya.`
                   };
@@ -608,11 +607,21 @@
               console.log("Catalog seeding completed successfully!");
           }
 
-          // Real-time listener for live updates, sync, and admin edits
           onValue(dbRef, (snap) => {
               const liveData = snap.val();
               if (liveData) {
-                  products = Object.keys(liveData).map(key => ({ id: key, ...liveData[key] }));
+                  products = Object.keys(liveData).map(key => ({ 
+                      id: key, 
+                      name: liveData[key].name || "Unnamed Perfume",
+                      category: liveData[key].category || "Perfumes",
+                      price: liveData[key].price || 6500,
+                      stock: liveData[key].stock !== undefined ? liveData[key].stock : 15,
+                      rating: liveData[key].rating || 5.0,
+                      reviews: liveData[key].reviews || 10,
+                      image: liveData[key].image || "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=400&q=80",
+                      notes: liveData[key].notes || "",
+                      description: liveData[key].description || ""
+                  }));
                   renderProducts();
               } else {
                   products = [];
@@ -625,7 +634,6 @@
       }
   }
 
-  // Start initialization
   initDatabaseAndListen();
 
   function getAdminPassword() {
@@ -695,7 +703,7 @@
               ${isOutOfStock ? `<span class="stock-badge out">Sold Out</span>` : (isLowStock ? `<span class="stock-badge">Low Stock (${p.stock})</span>` : '')}
               
               <div class="product-image">
-                  <img src="${p.image}" alt="${p.name}">
+                  <img src="${p.image}" alt="${p.name}" loading="lazy" decoding="async">
               </div>
               <div class="product-details">
                   <div class="product-category">${p.category}</div>
@@ -800,7 +808,7 @@
           const fileInput = document.getElementById("prodImageFile");
           
           let existingProduct = editId ? products.find(p => p.id == editId) : null;
-          let imageDataUrl = existingProduct ? existingProduct.image : "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=800&q=85";
+          let imageDataUrl = existingProduct ? existingProduct.image : "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=400&q=80";
 
           if (imageUrlInput !== "") {
               imageDataUrl = imageUrlInput;
